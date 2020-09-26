@@ -22,7 +22,7 @@ for f in "$SOURCE_FOLDER"/*; do
                 echo "update show"
                 h=$(printf %q "$f1")
                 echo $h >> $INPUT
-             fi 
+             fi
         else
              echo "new show"
              h=$(printf %q "$f1")
@@ -30,6 +30,8 @@ for f in "$SOURCE_FOLDER"/*; do
         fi  
     fi
 done
+
+}
 
 process_folders () {
 
@@ -70,5 +72,3 @@ else
     get_folders
     process_folders
 fi
-
-}
