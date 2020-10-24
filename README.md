@@ -15,7 +15,7 @@ CONTAINER_FOLDER = the base folder of your union "/mnt/unionfs/"
 
 TRIGGER = this will be either "tv" or "movie"
 
-URL = this is your autscan URL "http://autoscan:3030"
+URL = this is your autoscan URL "http://autoscan:3030"
 
 the script needs to be started in the base folder of your media, like "/mnt/unionfs"
 but, if you want it to scan content separate from the union, so it only see ZenDrive and not ZD_TDs
@@ -42,3 +42,8 @@ or from the ZenDrive folder
 seed@superplex:~$ cd /mnt/sharedrives/zd-storage/zd-movies/
 seed@superplex:/mnt/sharedrives/zd-storage/zd-movies2$ bash -x /opt/scanfolder/scanfolder.sh movies/20s /mnt/unionfs/ movie http://autoscan:3030
 ```
+
+
+
+#NOTE:
+the script assumes the triggers in your config.yml are sonarr & radarr
