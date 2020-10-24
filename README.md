@@ -1,5 +1,7 @@
 # scanfolder
 
+this will compare the contents of a folder against your plex database and add any missing content to AUTOSCAN
+
 ```
 #bin/bash
 SOURCE_FOLDER=$1
