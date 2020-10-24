@@ -38,7 +38,7 @@ for f in "$SOURCE_FOLDER"/*; do
         fi  
     fi
 done
-
+}
 process_folders () {
 
 line=$(head -n 1 $INPUT)
