@@ -9,7 +9,7 @@ URL=$4
 INPUT="/opt/scanfolders/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 ```
-SOURCE_FOLDER = the folder you want scanfolder to look at "/tv/10s" or /movies/10s"the base folder of your union "/mnt/unionfs/"
+SOURCE_FOLDER = the folder you want scanfolder to look at "/tv/10s" or "/movies/10s" 
 
 CONTAINER_FOLDER = the base folder of your union "/mnt/unionfs/"
 
