@@ -10,8 +10,11 @@ INPUT="/opt/scanfolders/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 ```
 SOURCE_FOLDER = the folder you want scanfolder to look at "/tv/10s" or /movies/10s"the base folder of your union "/mnt/unionfs/"
+
 CONTAINER_FOLDER = the base folder of your union "/mnt/unionfs/"
+
 TRIGGER = this will be either "tv" or "movie"
+
 URL = this is your autscan URL "http://autoscan:3030"
 
 the script needs to be started in the base folder of your media, like "/mnt/unionfs"
