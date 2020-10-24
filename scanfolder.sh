@@ -6,13 +6,6 @@ URL=$4
 INPUT="/opt/scanfolders/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 
-# for TV
-# /mnt/unionfs:  bash x /opt/scanfolder/scanfolder.sh tv/10s /mnt/unionfs/ tv http://autoscan:3030
-#
-# for Film
-# /mnt/unionfs:  bash x /opt/scanfolder/scanfolder.sh movies/10s /mnt/unionfs/ movie http://autoscan:3030
-#
-
 get_folders () {
 
 for f in "$SOURCE_FOLDER"/*; do
