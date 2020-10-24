@@ -46,4 +46,8 @@ seed@superplex:/mnt/sharedrives/zd-storage/zd-movies2$ bash -x /opt/scanfolder/s
 
 
 #NOTE:
+
 the script assumes the triggers in your config.yml are sonarr & radarr
+
+and finally a shout out to "m1lkman" for coming up with the code for the process_autoscan funtion
+https://discord.com/channels/381077432285003776/738466261473951804/769287309123387433
