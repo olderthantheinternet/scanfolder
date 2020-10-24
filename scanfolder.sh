@@ -3,7 +3,7 @@ SOURCE_FOLDER=$1
 CONTAINER_FOLDER=$2
 TRIGGER=$3
 URL=$4
-INPUT="/opt/scanfolders/section-$SECTION-${SOURCE_FOLDER///}-folders.txt"
+INPUT="/opt/scanfolders/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 
 # for TV
@@ -38,6 +38,7 @@ for f in "$SOURCE_FOLDER"/*; do
     fi
 done
 }
+
 process_folders () {
 
 line=$(head -n 1 $INPUT)
