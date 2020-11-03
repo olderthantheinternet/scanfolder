@@ -8,7 +8,8 @@ SOURCE_FOLDER=$1
 CONTAINER_FOLDER=$2
 TRIGGER=$3
 URL=$4
-INPUT="/opt/scanfolders/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
+USERPASS=$5
+INPUT="/opt/scanfolder/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 ```
 SOURCE_FOLDER = the folder you want scanfolder to look at "/tv/10s" or "/movies/10s" 
@@ -18,6 +19,8 @@ CONTAINER_FOLDER = the base folder of your union "/mnt/unionfs/"
 TRIGGER = this will be either "tv" or "movie"
 
 URL = this is your autoscan URL "http://autoscan:3030"
+
+USERPASS = for the autoscan URL (if used) in the form of username:password
 
 the script needs to be started in the base folder of your media, like "/mnt/unionfs"
 but, if you want it to scan content separate from the union, so it only see ZenDrive and not ZD_TDs
