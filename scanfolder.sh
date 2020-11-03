@@ -3,6 +3,7 @@ SOURCE_FOLDER=$1
 CONTAINER_FOLDER=$2
 TRIGGER=$3
 URL=$4
+USERPASS=$5
 INPUT="/opt/scanfolder/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 
@@ -77,7 +78,12 @@ process_autoscan () {
 		  ;;
 	esac
 	
-	curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
+	if [ -n "${USERPASS+set}" ]; then
+   		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType -u $USERPASS > /dev/null
+	else
+   		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
+	fi
+	
 	if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
 		echo "$1 added to your autoscan queue!"
 	if [[ $? -ne 0 ]]; then
