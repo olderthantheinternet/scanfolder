@@ -3,7 +3,7 @@ SOURCE_FOLDER=$1
 CONTAINER_FOLDER=$2
 TRIGGER=$3
 URL=$4
-INPUT="/opt/scanfolders/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
+INPUT="/opt/scanfolder/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 
 get_folders () {
