@@ -12,7 +12,7 @@ get_folders () {
 for f in "$SOURCE_FOLDER"/*; do
     if [ -d "${f}" ]; then
         f1=$(printf "%s" "$f" | sed 's|[\]||g')
-        f2=$(printf "%s" "$f1" | sed "s/'/\"/g")
+	f2=$(printf "%b" "$f1" | sed "s/'/\"/g")
         exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f2%'" )
         if (( exists > 0 )); then
              echo "It exists!"
