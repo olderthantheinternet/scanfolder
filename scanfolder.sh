@@ -40,16 +40,18 @@ for f in "$SOURCE_FOLDER"/*; do
     if [ -d "${f}" ]; then
         f1=$(printf "%s" "$f" | sed 's|[\]||g')
         f2=$(printf "%s" "$f1" | sed "s/'/\"/g")
-	fullfile=$CONTAINER_FOLDER$f2
-	fullfile=$(printf "%s" "$fullfile" | sed 's|[\]||g')
+        fullfile=$CONTAINER_FOLDER$f
+        fullfile=$(printf "%s" "$fullfile" | sed 's|[\]||g')
         fullfile=$(printf "%s" "$fullfile" | sed "s/'/\"/g")
-	if [ ! -z "$DAYSAGO" ]
-	then
-	  datecheck="$( find "$fullfile" -newermt $(date +%Y-%m-%d -d '"$DAYSAGO" day ago') -type f ) | wc -l )"
-	else
-	  datecheck=1
-	fi
-	if test $datecheck > 0; then
+        fullfile="$fullfile"
+        if [ ! -z "$DAYSAGO" ]
+        then
+          DA="$DAYSAGO day ago"
+          datecheck="$( find "$fullfile" -newermt "$DA" -type f | wc -l )"
+        else
+          datecheck=1
+        fi
+        if test $datecheck > 0; then
 		SPCHECK='%'
 		if [[ "$f2" == *"$SPCHECK"* ]]; 
 		then
