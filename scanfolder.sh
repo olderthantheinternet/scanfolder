@@ -111,7 +111,7 @@ process_autoscan () {
 		  ;;
 	esac
 	
-	i#f [ -n "${USERPASS+set}" ]; then
+	#if [ -n "${USERPASS+set}" ]; then
 	if [ -z "$USERPASS" ] 
 	then
    		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
