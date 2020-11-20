@@ -3,6 +3,7 @@ SOURCE_FOLDER=$1
 CONTAINER_FOLDER=$2
 TRIGGER=$3
 URL=$4
+DAYSAGO=
 USERPASS=$5
 tmp=zen$((10 + $RANDOM % 20))
 mkdir -p "$HOME/$tmp"
@@ -39,32 +40,43 @@ for f in "$SOURCE_FOLDER"/*; do
     if [ -d "${f}" ]; then
         f1=$(printf "%s" "$f" | sed 's|[\]||g')
         f2=$(printf "%s" "$f1" | sed "s/'/\"/g")
-        SPCHECK='%'
-        if [[ "$f2" == *"$SPCHECK"* ]]; 
-        then
-          f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
-          echo "theres a percent sign"
-          exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
-        else
-          exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f2%'" )
-        fi
-        if (( exists > 0 )); then
-             echo "It exists!"
-             linecount="$( find ./"$f2" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
-	if test $linecount -eq $exists; then
-                echo "item count the same"
-		#check all items to see if text matches
-                check_each_item 
-             else
-                echo "update media"
-                h=$(printf %q "$f1")
-                echo $h >> $INPUT
-             fi 
-        else
-             echo "new media"
-             h=$(printf %q "$f1")
-             echo $h >> $INPUT
-        fi  
+	fullfile=$CONTAINER_FOLDER$f2
+	fullfile=$(printf "%s" "$fullfile" | sed 's|[\]||g')
+        fullfile=$(printf "%s" "$fullfile" | sed "s/'/\"/g")
+	if [ -z "$DAYSAGO" ]
+	then
+	  datecheck="$( find "$fullfile" -newermt $(date +%Y-%m-%d -d '$DAYSAGO day ago') -type f ) | wc -l )"
+	else
+	  datecheck=1
+	fi
+	if test $datecheck > 0; then
+		SPCHECK='%'
+		if [[ "$f2" == *"$SPCHECK"* ]]; 
+		then
+		  f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
+		  echo "theres a percent sign"
+		  exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
+		else
+		  exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f2%'" )
+		fi
+		if (( exists > 0 )); then
+		     echo "It exists!"
+		     linecount="$( find ./"$f2" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
+		if test $linecount -eq $exists; then
+			echo "item count the same"
+			#check all items to see if text matches
+			check_each_item 
+		     else
+			echo "update media"
+			h=$(printf %q "$f1")
+			echo $h >> $INPUT
+		     fi 
+		else
+		     echo "new media"
+		     h=$(printf %q "$f1")
+		     echo $h >> $INPUT
+		fi  
+	fi
     fi
 done
 }
