@@ -43,7 +43,7 @@ for f in "$SOURCE_FOLDER"/*; do
 	fullfile=$CONTAINER_FOLDER$f2
 	fullfile=$(printf "%s" "$fullfile" | sed 's|[\]||g')
         fullfile=$(printf "%s" "$fullfile" | sed "s/'/\"/g")
-	if [ -z "$DAYSAGO" ]
+	if [ ! -z "$DAYSAGO" ]
 	then
 	  datecheck="$( find "$fullfile" -newermt $(date +%Y-%m-%d -d '$DAYSAGO day ago') -type f ) | wc -l )"
 	else
