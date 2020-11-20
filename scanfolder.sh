@@ -7,6 +7,31 @@ USERPASS=$5
 INPUT="/opt/scanfolder/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 
+check_each_item ()
+{
+         fullfile=$CONTAINER_FOLDER$f2
+         filename=$(basename -- "$fullfile")
+         fullfile=$(printf "%s" "$fullfile" | sed 's|[\]||g')
+         fullfile=$(printf "%s" "$fullfile" | sed "s/'/\"/g")
+         #extension="${filename##*.}"
+         #filename="${filename%.*}"
+         cmd="select file from media_parts where file like '$fullfile%'"
+         IFS=$'\n'
+         fqry=(`sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "$cmd"`)
+
+         for f in "${fqry[@]}"; do
+           echo "$f"
+           count="$( find "$f" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
+           if test $count -eq 1; then
+                echo "individual file names the same, no update"
+           else
+                echo "update media"
+                h=$(printf %q "$f1")
+                echo $h >> $INPUT
+           fi
+         done
+}
+
 get_folders () {
 
 for f in "$SOURCE_FOLDER"/*; do
@@ -27,6 +52,8 @@ for f in "$SOURCE_FOLDER"/*; do
              linecount="$( find ./"$f2" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
 	if test $linecount -eq $exists; then
                 echo "item count the same"
+		#check all items to see if text matches
+                check_each_item 
              else
                 echo "update media"
                 h=$(printf %q "$f1")
@@ -85,10 +112,12 @@ process_autoscan () {
 		  ;;
 	esac
 	
-	if [ -n "${USERPASS+set}" ]; then
-   		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType -u $USERPASS > /dev/null
-	else
+	#if [ -n "${USERPASS+set}" ]; then
+	if [ -z "$USERPASS" ] 
+	then
    		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
+	else
+   		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType -u $USERPASS > /dev/null
 	fi
 	
 	if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
