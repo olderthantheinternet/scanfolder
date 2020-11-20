@@ -45,7 +45,7 @@ for f in "$SOURCE_FOLDER"/*; do
         fullfile=$(printf "%s" "$fullfile" | sed "s/'/\"/g")
 	if [ ! -z "$DAYSAGO" ]
 	then
-	  datecheck="$( find "$fullfile" -newermt $(date +%Y-%m-%d -d '$DAYSAGO day ago') -type f ) | wc -l )"
+	  datecheck="$( find "$fullfile" -newermt $(date +%Y-%m-%d -d '"$DAYSAGO" day ago') -type f ) | wc -l )"
 	else
 	  datecheck=1
 	fi
