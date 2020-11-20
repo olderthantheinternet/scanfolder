@@ -111,10 +111,12 @@ process_autoscan () {
 		  ;;
 	esac
 	
-	if [ -n "${USERPASS+set}" ]; then
-   		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType -u $USERPASS > /dev/null
-	else
+	i#f [ -n "${USERPASS+set}" ]; then
+	if [ -z "$USERPASS" ] 
+	then
    		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
+	else
+   		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType -u $USERPASS > /dev/null
 	fi
 	
 	if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
