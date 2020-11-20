@@ -4,8 +4,9 @@ CONTAINER_FOLDER=$2
 TRIGGER=$3
 URL=$4
 USERPASS=$5
-tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
-INPUT="$tmp_dir/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
+tmp=zen$((10 + $RANDOM % 20))
+mkdir -p "$HOME/$tmp"
+INPUT="$HOME/$tmp/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 DOCKERNAME="plex"
 
 check_each_item ()
@@ -75,8 +76,7 @@ line=$(head -n 1 $INPUT)
 if [ -z "$line" ]
 then
       echo "\$line is empty - deleting control file"
-        #rm -rf $INPUT
-	rm -rf $tmp_dir
+      rm -rf $INPUT
       exit 7
 else
       echo "\$line is NOT empty - processng control file"
