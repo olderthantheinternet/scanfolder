@@ -13,7 +13,15 @@ for f in "$SOURCE_FOLDER"/*; do
     if [ -d "${f}" ]; then
         f1=$(printf "%s" "$f" | sed 's|[\]||g')
         f2=$(printf "%s" "$f1" | sed "s/'/\"/g")
-        exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f2%'" )
+        SPCHECK='%'
+        if [[ "$f2" == *"$SPCHECK"* ]]; 
+        then
+          f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
+          echo "theres a percent sign"
+          exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
+        else
+          exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f2%'" )
+        fi
         if (( exists > 0 )); then
              echo "It exists!"
              linecount="$( find ./"$f2" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
