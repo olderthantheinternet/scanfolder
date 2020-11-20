@@ -41,7 +41,6 @@ for f in "$SOURCE_FOLDER"/*; do
 done
 }
 
-}
 
 process_folders () {
 
