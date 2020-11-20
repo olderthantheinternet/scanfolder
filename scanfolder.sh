@@ -21,14 +21,13 @@ check_each_item ()
 
          for f in "${fqry[@]}"; do
            echo "$f"
-           count="$( find "$f" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
-           if test $count -eq 1; then
-                echo "individual file names the same, no update"
-           else
-                echo "update media"
-                h=$(printf %q "$f1")
-                echo $h >> $INPUT
-           fi
+	   if [ -f "$f" ]; then
+	     echo "individual file names the same, no update"
+	   else 
+	     echo "update media"
+             h=$(printf %q "$f1")
+             echo $h >> $INPUT
+	   fi
          done
 }
 
