@@ -1,4 +1,9 @@
 #!/bin/bash
+# cd /mnt/unionfs
+# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex
+# -d, -h, and -p are optional
+# and when using -d or -h, you only use one - not both
+# -d = days ago and -h = hours ago
 while getopts s:c:t:u:d:h:p:o: option; do 
     case "${option}" in
 	s) SOURCE_FOLDER=${OPTARG};;
