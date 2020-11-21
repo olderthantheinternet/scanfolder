@@ -35,7 +35,6 @@ check_each_item ()
 }
 
 get_folders () {
-
 for f in "$SOURCE_FOLDER"/*; do
     if [ -d "${f}" ]; then
         f1=$(printf "%s" "$f" | sed 's|[\]||g')
@@ -64,7 +63,7 @@ for f in "$SOURCE_FOLDER"/*; do
 		if (( exists > 0 )); then
 		     echo "It exists!"
 		     linecount="$( find ./"$f2" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
-		if test $linecount -eq $exists; then
+		     if test $linecount -eq $exists; then
 			echo "item count the same"
 			#check all items to see if text matches
 			check_each_item 
@@ -74,9 +73,9 @@ for f in "$SOURCE_FOLDER"/*; do
 			echo $h >> $INPUT
 		     fi 
 		else
-		     echo "new media"
-		     h=$(printf %q "$f1")
-		     echo $h >> $INPUT
+		    echo "new media"
+		    h=$(printf %q "$f1")
+		    echo $h >> $INPUT
 		fi  
 	fi
     fi
