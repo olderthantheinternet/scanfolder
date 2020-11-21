@@ -1,18 +1,17 @@
 #!/bin/bash
-while getopts s:c:t:u:d:h:p:o: option
-do
-case "${option}"
-in
-s) SOUREC_FOLDER=${OPTARG};;
-c) CONTAINER_FOLDER=${OPTARG};;
-t) TRIGGER=${OPTARG};;
-u) URL=${OPTARG};;
-d) DAYSAGO=${OPTARG};;
-h) HOURSAGO=${OPTARG};;
-p) USERPASS=${OPTARG};;
-o) DOCKERNAME=${OPTARG};;
-esac
+while getopts s:c:t:u:d:h:p:o: option; do 
+    case "${option}" in
+	s) SOURCE_FOLDER=${OPTARG};;
+	c) CONTAINER_FOLDER=${OPTARG};;
+	t) TRIGGER=${OPTARG};;
+	u) URL=${OPTARG};;
+	d) DAYSAGO=${OPTARG};;
+	h) HOURSAGO=${OPTARG};;
+	p) USERPASS=${OPTARG};;
+	o) DOCKERNAME=${OPTARG};;
+     esac
 done
+
 mkdir -p "$HOME/scanfolder_data"
 INPUT="$HOME/scanfolder_data/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 
