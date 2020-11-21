@@ -1,10 +1,10 @@
 #!/bin/bash
 # cd /mnt/unionfs
-# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex
+# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex -z '/path to plex db/'
 # -d, -h, and -p are optional
 # and when using -d or -h, you only use one - not both
 # -d = days ago and -h = hours ago
-while getopts s:c:t:u:d:h:p:o: option; do 
+while getopts s:c:t:u:d:h:p:o:z: option; do 
     case "${option}" in
 	s) SOURCE_FOLDER=${OPTARG};;
 	c) CONTAINER_FOLDER=${OPTARG};;
@@ -14,10 +14,11 @@ while getopts s:c:t:u:d:h:p:o: option; do
 	h) HOURSAGO=${OPTARG};;
 	p) USERPASS=${OPTARG};;
 	o) DOCKERNAME=${OPTARG};;
+	z) PLEXDB=${OPTARG};;
      esac
 done
 
-mkdir -p "$HOME/scanfolder_data"
+mkdir -p "$HOME/scanfolder_data/"
 INPUT="$HOME/scanfolder_data/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 
 
@@ -28,8 +29,14 @@ check_each_item ()
          fullfile=$(printf "%s" "$fullfile" | sed 's|[\]||g')
          fullfile=$(printf "%s" "$fullfile" | sed "s/'/\"/g")
          cmd="select file from media_parts where file like '$fullfile%'"
-         IFS=$'\n'
-         fqry=(`sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "$cmd"`)
+	 if [ ! -z "$PLEXDB" ]
+         then
+	     plex="${PLEXDB}com.plexapp.plugins.library.db"
+	 else
+	     plex="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+	 fi
+	 IFS=$'\n'
+         fqry=(`sqlite3 "$plex" "$cmd"`)
          for f in "${fqry[@]}"; do
            echo "$f"
 	   if [ -f "$f" ]; then
@@ -64,13 +71,19 @@ for f in "$SOURCE_FOLDER"/*; do
         fi
         if test $datecheck > 0; then
 		SPCHECK='%'
-		if [[ "$f2" == *"$SPCHECK"* ]]; then
-		  f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
-		  echo "theres a percent sign"
-		  exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
+		if [ ! -z "$PLEXDB" ]
+		then
+		     plex="${PLEXDB}com.plexapp.plugins.library.db"
 		else
-		  exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f2%'" )
+		     plex="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 		fi
+                if [[ "$f2" == *"$SPCHECK"* ]]; then
+                  f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
+                  echo "theres a percent sign"
+                  exists=$( sqlite3 "$plex" "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
+                else
+                  exists=$( sqlite3 "$plex" "select count(*) from media_parts where file like '%$f2%'" )
+                fi
 		if (( exists > 0 )); then
 		     echo "It exists!"
 		     linecount="$( find ./"$f2" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
@@ -132,7 +145,7 @@ process_autoscan () {
 		  ;;
 	esac
 	
-	#if [ -n "${USERPASS+set}" ]; then
+	
 	if [ -z "$USERPASS" ] 
 	then
    		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
