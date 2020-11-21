@@ -1,14 +1,21 @@
 #!/bin/bash
-SOURCE_FOLDER=$1
-CONTAINER_FOLDER=$2
-TRIGGER=$3
-URL=$4
-DAYSAGO=""
-USERPASS=$5
-tmp=zen$((10 + $RANDOM % 20))
-mkdir -p "$HOME/$tmp"
-INPUT="$HOME/$tmp/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
-DOCKERNAME="plex"
+while getopts s:c:t:u:d:h:p:o: option
+do
+case "${option}"
+in
+s) SOUREC_FOLDER=${OPTARG};;
+c) CONTAINER_FOLDER=${OPTARG};;
+t) TRIGGER=${OPTARG};;
+u) URL=${OPTARG};;
+d) DAYSAGO=${OPTARG};;
+h) HOURSAGO=${OPTARG};;
+p) USERPASS=${OPTARG};;
+o) DOCKERNAME=${OPTARG};;
+esac
+done
+mkdir -p "$HOME/scanfolder_data"
+INPUT="$HOME/scanfolder_data/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
+
 
 check_each_item ()
 {
@@ -16,12 +23,9 @@ check_each_item ()
          filename=$(basename -- "$fullfile")
          fullfile=$(printf "%s" "$fullfile" | sed 's|[\]||g')
          fullfile=$(printf "%s" "$fullfile" | sed "s/'/\"/g")
-         #extension="${filename##*.}"
-         #filename="${filename%.*}"
          cmd="select file from media_parts where file like '$fullfile%'"
          IFS=$'\n'
          fqry=(`sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "$cmd"`)
-
          for f in "${fqry[@]}"; do
            echo "$f"
 	   if [ -f "$f" ]; then
@@ -47,13 +51,16 @@ for f in "$SOURCE_FOLDER"/*; do
         then
           DA="$DAYSAGO day ago"
           datecheck="$( find "$fullfile" -newermt "$DA" -type f | wc -l )"
-        else
+        else if [ ! -z "$HOURSAGO" ]
+	then
+	  DA="$HOURSAGO hours ago"
+          datecheck="$( find "$fullfile" -newermt "$DA" -type f | wc -l )"
+	else
           datecheck=1
         fi
         if test $datecheck > 0; then
 		SPCHECK='%'
-		if [[ "$f2" == *"$SPCHECK"* ]]; 
-		then
+		if [[ "$f2" == *"$SPCHECK"* ]]; then
 		  f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
 		  echo "theres a percent sign"
 		  exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
@@ -83,23 +90,19 @@ done
 }
 
 process_folders () {
-
-line=$(head -n 1 $INPUT)
-
-if [ -z "$line" ]
-then
-      echo "\$line is empty - deleting control file"
-      rm -rf $INPUT
-      exit 7
-else
-      echo "\$line is NOT empty - processng control file"
-      process_autoscan "$line"
-fi
-
+	line=$(head -n 1 $INPUT)
+        if [ -z "$line" ]
+	then
+	      echo "\$line is empty - deleting control file"
+	      rm -rf $INPUT
+	      exit 7
+	else
+	      echo "\$line is NOT empty - processng control file"
+	      process_autoscan "$line"
+	fi
 }
 
 process_autoscan () {
-
 	case $TRIGGER in
 	  movie)
 		  arrType="radarr"
