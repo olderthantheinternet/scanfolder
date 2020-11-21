@@ -84,9 +84,9 @@ for f in "$SOURCE_FOLDER"/*; do
 		if [[ "$f2" == *"$SPCHECK"* ]]; then
 		  f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
 		  echo "theres a percent sign"
-		  exists=$( sqlite3 "$plex" "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
+		  exists=$( sqlite3 $plex "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
 		else
-		  exists=$( sqlite3 "$plex" "select count(*) from media_parts where file like '%$f2%'" )
+		  exists=$( sqlite3 $plex "select count(*) from media_parts where file like '%$f2%'" )
 		fi
 		if (( exists > 0 )); then
 		     echo "It exists!"
