@@ -4,7 +4,7 @@
 # -d, -h, and -p are optional
 # and when using -d or -h, you only use one - not both
 # -d = days ago and -h = hours ago
-while getopts s:c:t:u:d:h:p:o: option; do 
+while getopts s:c:t:u:d:h:p:o:z: option; do 
     case "${option}" in
 	s) SOURCE_FOLDER=${OPTARG};;
 	c) CONTAINER_FOLDER=${OPTARG};;
@@ -18,7 +18,7 @@ while getopts s:c:t:u:d:h:p:o: option; do
      esac
 done
 
-mkdir -p "$HOME/scanfolder_data"
+mkdir -p "$HOME/scanfolder_data/"
 INPUT="$HOME/scanfolder_data/section-$TRIGGER-${SOURCE_FOLDER///}-folders.txt"
 
 
@@ -31,9 +31,7 @@ check_each_item ()
          cmd="select file from media_parts where file like '$fullfile%'"
 	 if [ ! -z "$PLEXDB" ]
          then
-	     plex=$(printf "%s" "$PLEXDB" | sed 's|[\]||g')
-	     plex=$(printf "%s" "$plex" | sed "s/'/\"/g")
-	     plex=$plex/com.plexapp.plugins.library.db
+	     plex="${PLEXDB}com.plexapp.plugins.library.db"
 	 else
 	     plex="/opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db"
 	 fi
@@ -75,19 +73,17 @@ for f in "$SOURCE_FOLDER"/*; do
 		SPCHECK='%'
 		if [ ! -z "$PLEXDB" ]
 		then
-		     plex=$(printf "%s" "$PLEXDB" | sed 's|[\]||g')
-		     plex=$(printf "%s" "$plex" | sed "s/'/\"/g")
-		     plex=$plex/com.plexapp.plugins.library.db
+		     plex="${PLEXDB}com.plexapp.plugins.library.db"
 		else
 		     plex="/opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db"
 		fi
-		if [[ "$f2" == *"$SPCHECK"* ]]; then
-		  f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
-		  echo "theres a percent sign"
-		  exists=$( sqlite3 $plex "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
-		else
-		  exists=$( sqlite3 $plex "select count(*) from media_parts where file like '%$f2%'" )
-		fi
+                if [[ "$f2" == *"$SPCHECK"* ]]; then
+                  f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
+                  echo "theres a percent sign"
+                  exists=$( sqlite3 "$plex" "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
+                else
+                  exists=$( sqlite3 "$plex" "select count(*) from media_parts where file like '%$f2%'" )
+                fi
 		if (( exists > 0 )); then
 		     echo "It exists!"
 		     linecount="$( find ./"$f2" -type f \( -iname \*.mkv -o -iname \*.mpeg -o -iname \*.m2ts -o -iname \*.ts -o -iname \*.avi -o -iname \*.mp4 -o -iname \*.m4v -o -iname \*.asf -o -iname \*.mov -o -iname \*.mpegts -o -iname \*.vob -o -iname \*.divx -o -iname \*.wmv \) | wc -l )"
