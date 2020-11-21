@@ -33,7 +33,7 @@ check_each_item ()
          then
 	     plex="${PLEXDB}com.plexapp.plugins.library.db"
 	 else
-	     plex="/opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db"
+	     plex="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 	 fi
 	 IFS=$'\n'
          fqry=(`sqlite3 "$plex" "$cmd"`)
@@ -75,7 +75,7 @@ for f in "$SOURCE_FOLDER"/*; do
 		then
 		     plex="${PLEXDB}com.plexapp.plugins.library.db"
 		else
-		     plex="/opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db"
+		     plex="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 		fi
                 if [[ "$f2" == *"$SPCHECK"* ]]; then
                   f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
