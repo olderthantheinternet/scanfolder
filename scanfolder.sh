@@ -50,7 +50,7 @@ for f in "$SOURCE_FOLDER"/*; do
         then
           DA="$DAYSAGO day ago"
           datecheck="$( find "$fullfile" -newermt "$DA" -type f | wc -l )"
-        else if [ ! -z "$HOURSAGO" ]
+        elif [ ! -z "$HOURSAGO" ]
 	then
 	  DA="$HOURSAGO hours ago"
           datecheck="$( find "$fullfile" -newermt "$DA" -type f | wc -l )"
