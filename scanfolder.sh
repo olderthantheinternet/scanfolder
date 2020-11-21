@@ -1,6 +1,6 @@
 #!/bin/bash
 # cd /mnt/unionfs
-# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex
+# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex -z '/path to plex db/'
 # -d, -h, and -p are optional
 # and when using -d or -h, you only use one - not both
 # -d = days ago and -h = hours ago
@@ -14,6 +14,7 @@ while getopts s:c:t:u:d:h:p:o: option; do
 	h) HOURSAGO=${OPTARG};;
 	p) USERPASS=${OPTARG};;
 	o) DOCKERNAME=${OPTARG};;
+	z) PLEXDB=${OPTARG};;
      esac
 done
 
@@ -28,8 +29,16 @@ check_each_item ()
          fullfile=$(printf "%s" "$fullfile" | sed 's|[\]||g')
          fullfile=$(printf "%s" "$fullfile" | sed "s/'/\"/g")
          cmd="select file from media_parts where file like '$fullfile%'"
-         IFS=$'\n'
-         fqry=(`sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "$cmd"`)
+	 if [ ! -z "$PLEXDB" ]
+         then
+	     plex=$(printf "%s" "$PLEXDB" | sed 's|[\]||g')
+	     plex=$(printf "%s" "$plex" | sed "s/'/\"/g")
+	     plex=$plex/com.plexapp.plugins.library.db
+	 else
+	     plex="/opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db"
+	 fi
+	 IFS=$'\n'
+         fqry=(`sqlite3 "$plex" "$cmd"`)
          for f in "${fqry[@]}"; do
            echo "$f"
 	   if [ -f "$f" ]; then
@@ -64,12 +73,20 @@ for f in "$SOURCE_FOLDER"/*; do
         fi
         if test $datecheck > 0; then
 		SPCHECK='%'
+		if [ ! -z "$PLEXDB" ]
+		then
+		     plex=$(printf "%s" "$PLEXDB" | sed 's|[\]||g')
+		     plex=$(printf "%s" "$plex" | sed "s/'/\"/g")
+		     plex=$plex/com.plexapp.plugins.library.db
+		else
+		     plex="/opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db"
+		fi
 		if [[ "$f2" == *"$SPCHECK"* ]]; then
 		  f3=$(printf "%s" "$f2" | sed 's/%/:%/g')
 		  echo "theres a percent sign"
-		  exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
+		  exists=$( sqlite3 "$plex" "select count(*) from media_parts where file like '%$f3%' ESCAPE ':'" )
 		else
-		  exists=$( sqlite3 /opt/plex/Library/Application\ Support/Plex\ Media\ Server/Plug-in\ Support/Databases/com.plexapp.plugins.library.db "select count(*) from media_parts where file like '%$f2%'" )
+		  exists=$( sqlite3 "$plex" "select count(*) from media_parts where file like '%$f2%'" )
 		fi
 		if (( exists > 0 )); then
 		     echo "It exists!"
@@ -132,7 +149,7 @@ process_autoscan () {
 		  ;;
 	esac
 	
-	#if [ -n "${USERPASS+set}" ]; then
+	
 	if [ -z "$USERPASS" ] 
 	then
    		curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
