@@ -4,11 +4,12 @@ this will compare the contents of a folder against your plex database and add an
 
 ```
 # cd /mnt/unionfs
-# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex -z '/path to plex db/'
+# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex -z '/path to plex db/' -w 30
 # -d, -h, and -p are optional
 # and when using -d or -h, you only use one - not both
 # -d = days ago and -h = hours ago
-while getopts s:c:t:u:d:h:p:o:z: option; do 
+# -w = number of seconds to wait between sends to autoscan, defauls to 10 if value is not set
+while getopts s:c:t:u:d:h:p:o:z:w: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -19,6 +20,7 @@ while getopts s:c:t:u:d:h:p:o:z: option; do
         p) USERPASS=${OPTARG};;
         o) DOCKERNAME=${OPTARG};;
         z) PLEXDB=${OPTARG};;
+        w) WAIT=${OPTARG};;
      esac
 done
 ```
@@ -39,6 +41,8 @@ USERPASS = for the autoscan URL (if used) in the form of username:password
 DOCKERNAME = the container name of your plex
 
 PLEXDB = complete path to your plex DB, note, if using Cloudbox you can skip defining it
+
+WAIT = the number of seconds to wait between sending to autoscan
 
 the script needs to be started in the base folder of your media, like "/mnt/unionfs"
 but, if you want it to scan content separate from the union, so it only see ZenDrive and not ZD_TDs
