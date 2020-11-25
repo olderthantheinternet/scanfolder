@@ -3,6 +3,11 @@
 # OS: Ubunti 16.04 ( in case of other OS's make sure to change paths )
 # Replace xxx with your plex token, you can get it by:
 # grep -E -o "PlexOnlineToken=.{0,22}" /opt/plex/Library/Application Support/Plex Media Server/Preferences.xml
+#
+# Usage - complete analysis for missing files in a particular folder
+# python3 plex-analyze-curl.py movies/20s
+# or
+# python3 plex-analyze-curl.py tv/20s
 
 #!/usr/bin/env python3
 import sys
