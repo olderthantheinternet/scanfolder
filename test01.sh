@@ -74,15 +74,16 @@ process_autoscan () {
         case $TRIGGER in
           movie)
                   arrType="radarr"
-                  folderPath="$(dirname "${1}")"
+                  #folderPath="$(dirname "${1}")"
+                  folderPath="$1"
                   relativePath=$(basename "$folderPath")
                   jsonData='{"eventType": "Download", "movie": {"folderPath": "'"$folderPath"/'"}, "movieFile": {"relativePath": "'"$relativePath"/'"}}'
                   ;;
           tv|television|series)
                   arrType="sonarr"
                   folderPath="$1"
-                  relativePath="season 1"
-                  jsonData='{"eventType": "Download","episodeFile": {"relativePath": "'"$relativePath"'"},"series": {"path": "'"$folderPath"'"}}'
+                  relativePath=$(basename "$folderPath")
+                  jsonData='{"eventType": "Download","episodeFile": {"relativePath": "'"$relativePath"'"},"series": {"path": "'"$folderPath"/'"}}'
                   ;;
           '')
                   echo "Media type parameter is empty"
@@ -131,6 +132,6 @@ unset IFS
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
-  echo "${g}"
-  #process_autoscan "$f"; 
+  #echo "${g}"
+  process_autoscan "${g}"; 
 done
