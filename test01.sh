@@ -59,7 +59,7 @@ process_autoscan () {
                   arrType="radarr"
                   folderPath="$(dirname "${1}")"
                   relativePath=$(basename "$folderPath")
-                  jsonData='{"eventType": "Download", "movie": {"folderPath": "'"$folderPath"'"}, "movieFile": {"relativePath": "'"$relativePath"'"}}'
+                  jsonData='{"eventType": "Download", "movie": {"folderPath": "'"$folderPath"/'"}, "movieFile": {"relativePath": "'"$relativePath"/'"}}'
                   ;;
           tv|television|series)
                   arrType="sonarr"
@@ -101,9 +101,17 @@ process_autoscan () {
 get_files
 get_db_items
 readarray -t missing_files < <(printf '%s\n' "${db_list[@]}" "${file_list[@]}" | sort | uniq -u)
+declare -a farray
 for i in "${missing_files[@]}"; 
-do 
+do
   f=("$(cut -d '|' -f2 <<< "$i")");
   f=${f//[$'\t\r\n']}
-  process_autoscan "$f"; 
+  farray+=("$(dirname "${f}")")
+done   
+sorted_unique_ids=($(echo "${farray[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+for i in "${sorted_unique_ids[@]}"; 
+do 
+  f=${f//[$'\t\r\n']}
+  echo "$f"
+  #process_autoscan "$f"; 
 done
