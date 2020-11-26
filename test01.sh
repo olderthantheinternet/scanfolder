@@ -129,6 +129,6 @@ uniq=( $(printf '%s\n' "${farray[@]}" | sort -u) )
 for i in "${uniq[@]}"; 
 do 
   f=${i//[$'\t\r\n']}
-  echo "$f"
+  echo "\${f}"
   #process_autoscan "$f"; 
 done
