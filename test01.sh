@@ -124,8 +124,9 @@ do
   f=("$(cut -d '|' -f2 <<< "$i")");
   f=${f//[$'\t\r\n']}
   farray+=("$(dirname "${f}")")
-done   
-sorted_unique_ids=($(echo "${farray[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+done
+readarray -t sorted_unique_ids < <(printf '%s\n' "${farray[@]}" | sort -u | uniq -u)
+#sorted_unique_ids=($(echo "${farray[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 for i in "${sorted_unique_ids[@]}"; 
 do 
   f=${i//[$'\t\r\n']}
