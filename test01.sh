@@ -117,7 +117,7 @@ process_autoscan () {
 
 get_files
 get_db_items
-readarray -t missing_files < <(printf '%s\n' "${db_list[@]}" "${file_list[@]}" | sort | uniq -u)
+readarray -t missing_files < <(printf '%s\n' "${db_list[@]}" "${file_list[@]}" | sort -u | uniq -u)
 declare -a farray
 for i in "${missing_files[@]}"; 
 do
@@ -126,11 +126,11 @@ do
   farray+=("$(dirname "${f}")")
 done
 IFS=$'\n'
-uniq=( $(printf '%s\n' "${farray[@]}" | sort -u) )
+readarray -t uniq < <(printf '%s\n' "${farray[@]}" | sort -u)
 unset IFS
 for i2 in "${uniq[@]}"; 
 do 
-  f=${i2//[$'\t\r\n']}
-  echo "\$f"
+  g=${i2//[$'\t\r\n']}
+  echo "${g}"
   #process_autoscan "$f"; 
 done
