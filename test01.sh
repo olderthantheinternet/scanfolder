@@ -27,10 +27,10 @@ get_files ()
   declare -a file_list
   case $TRIGGER in
           movie)
-                  $depth="2"
+                  depth=2
                   ;;
           tv|television|series)
-                  $depth="3"
+                  depth=3
                   ;;
           '')
                   echo "Media type parameter is empty"
