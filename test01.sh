@@ -5,7 +5,7 @@
 # and when using -d or -h, you only use one - not both
 # -d = days ago and -h = hours ago
 #-w = second to wait between sends to autoscan
-while getopts s:c:t:u:d:h:p:o:z:w:r:z: option; do 
+while getopts s:c:t:u:d:h:p:o:z:w:r:a: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -18,7 +18,7 @@ while getopts s:c:t:u:d:h:p:o:z:w:r:z: option; do
         z) PLEXDB=${OPTARG};;
         w) WAIT=${OPTARG};;
         r) RCLONEMOUNT=${OPTARG};;
-        Z) ZDTD=${OPTARG};;
+        a) ZDTD=${OPTARG};;
      esac
 done
 
@@ -42,7 +42,7 @@ get_files ()
                   ;;
         esac
   IFS=$'\n' 
-  filelist=($(rclone lsf --files-only --max-depth "$depth" --format sp --separator "|" --absolute "$RCLONEMOUNT":"$ZDTD"/"$SOURCE_FOLDER"))
+  filelist=($(rclone lsf --files-only --max-depth "$depth" --format sp --separator "|" --absolute "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
   unset IFS
   for i in "${filelist[@]}"
   do
