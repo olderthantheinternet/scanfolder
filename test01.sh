@@ -57,7 +57,7 @@ process_autoscan () {
         case $TRIGGER in
           movie)
                   arrType="radarr"
-                  folderPath="$1"
+                  folderPath="$(dirname "${1}")"
                   relativePath=$(basename "$folderPath")
                   jsonData='{"eventType": "Download", "movie": {"folderPath": "'"$folderPath"'"}, "movieFile": {"relativePath": "'"$relativePath"'"}}'
                   ;;
