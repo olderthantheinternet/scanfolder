@@ -24,9 +24,25 @@ done
 
 get_files ()
 {
-  file_list=()
+  declare -a file_list
+  case $TRIGGER in
+          movie)
+                  $depth=2
+                  ;;
+          tv|television|series)
+                  $depth=3
+                  ;;
+          '')
+                  echo "Media type parameter is empty"
+                  exit;
+                  ;;
+          *)
+                  echo "Media type specified unknown"
+                  exit;
+                  ;;
+        esac
   IFS=$'\n' 
-  filelist=($(rclone lsf --files-only --max-depth 2 --format sp --separator "|" --absolute "$RCLONEMOUNT":"$ZDTD"/"$SOURCE_FOLDER"))
+  filelist=($(rclone lsf --files-only --max-depth $depth --format sp --separator "|" --absolute "$RCLONEMOUNT":"$ZDTD"/"$SOURCE_FOLDER"))
   unset IFS
   for i in "${filelist[@]}"
   do
