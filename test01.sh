@@ -125,10 +125,12 @@ do
   f=${f//[$'\t\r\n']}
   farray+=("$(dirname "${f}")")
 done
+IFS=$'\n'
 uniq=( $(printf '%s\n' "${farray[@]}" | sort -u) )
-for i in "${uniq[@]}"; 
+unset IFS
+for i2 in "${uniq[@]}"; 
 do 
-  f=${i//[$'\t\r\n']}
-  echo "\${f}"
+  f=${i2//[$'\t\r\n']}
+  echo "\$f"
   #process_autoscan "$f"; 
 done
