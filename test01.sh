@@ -85,7 +85,7 @@ process_autoscan () {
         fi
         
         if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
-                #echo "$1 added to your autoscan queue!"
+                echo "$1 added to your autoscan queue!"
         if [[ $? -ne 0 ]]; then
                 echo $1 >> /tmp/failedscans.txt
         else
@@ -100,12 +100,10 @@ process_autoscan () {
 
 get_files
 get_db_items
-IFS=$'\n' 
-missing_files=($("$(printf '%s\n' "${db_list[@]}" "${db_list[@]}" "${file_list[@]}" | sort | uniq -u)"))
-unset IFS
-for i2 in "${missing_files[@]}"; do
-   ff=("$(cut -d '|' -f2 <<< "$i2")")
-   #f=${f//[$'\t\r\n']}
-   #process_autoscan "$f"
-   echo "\$ff"
+readarray -t missing_files < <(printf '%s\n' "${db_list[@]}" "${file_list[@]}" | sort | uniq -u)
+for i in "${missing_files[@]}"; 
+do 
+  f=("$(cut -d '|' -f2 <<< "$i")");
+  f=${f//[$'\t\r\n']}
+  process_autoscan "$f"; 
 done
