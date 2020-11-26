@@ -66,7 +66,7 @@ get_db_items ()
          fqry=(`sqlite3 "$plex" "$cmd"`)
          unset IFS
          for f in "${fqry[@]}"; do
-           echo "\$f"
+           echo "\${f}"
            db_list+=("${f}")
          done
 }
