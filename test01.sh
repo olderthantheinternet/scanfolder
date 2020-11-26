@@ -66,7 +66,6 @@ get_db_items ()
          fqry=(`sqlite3 "$plex" "$cmd"`)
          unset IFS
          for f in "${fqry[@]}"; do
-           echo "\${f}"
            db_list+=("${f}")
          done
 }
@@ -130,6 +129,6 @@ sorted_unique_ids=($(echo "${farray[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 for i in "${sorted_unique_ids[@]}"; 
 do 
   f=${f//[$'\t\r\n']}
-  //echo "$f"
+  echo "$f"
   #process_autoscan "$f"; 
 done
