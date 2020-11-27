@@ -133,12 +133,11 @@ c=1
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
-  #echo "${g}"
-  c=$[$c +1]
   if [ ${depth} == 3 ] && [ ${c} > 1 ]; then
      process_autoscan "${g}";
   elif [ ${depth} == 2 ]; then
      process_autoscan "${g}";
   fi
+  c=$[$c +1]
 done
 echo "${c} files processed"
