@@ -133,9 +133,9 @@ c=1
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
-  if [ ${depth} == 3 ] && [ ${c} > 1 ]; then
-     process_autoscan "${g}";
-  elif [ ${depth} == 2 ]; then
+  if [ "${g}" == "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; the
+     #skip
+  else
      process_autoscan "${g}";
   fi
   c=$[$c +1]
