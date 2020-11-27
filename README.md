@@ -48,12 +48,12 @@ seed@superplex:$ /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv
 ```
 And for MOVIES it would look like:
 ```
-seed@superplex:$/path/scanfolder/scanfolder.sh -s movies/10s -c /mnt/unionfs/ -t movie -u http://autoscan.TDL:3030 -d 2 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-movies
+seed@superplex:$/path/scanfolder/scanfolder.sh -s movies/10s -c /mnt/unionfs/ -t movie -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-movies
 ```
 
 #NOTE:
 
 the script assumes the triggers in your config.yml are sonarr & radarr
 
-and finally a shout out to "m1lkman" for coming up with the code for the process_autoscan funtion
+and finally a shout out to "m1lkman" for coming up with the code for the process_autoscan function
 https://discord.com/channels/381077432285003776/738466261473951804/769287309123387433
