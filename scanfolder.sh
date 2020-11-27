@@ -46,7 +46,7 @@ get_files ()
      #filesize=("$(cut -d '|' -f2 <<< "$i")")
      #filepath=("$(cut -d '|' -f1 <<< "$i")")
      #file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${filepath}|${filesize}")
-     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
+     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}/${i}")
   done
 }
 
