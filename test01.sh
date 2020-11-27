@@ -1,21 +1,18 @@
 #!/bin/bash
 # cd /mnt/unionfs
-# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zd_storage -a zd-movies
+# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex -z '/path to plex db/' -w 10
 # -d, -h, and -p are optional
 # and when using -d or -h, you only use one - not both
 # -d = days ago and -h = hours ago
 #-w = second to wait between sends to autoscan
-#
-# two new flags -z & -a
-# -z = the name of your Zendrive-local rclone mount
-# -a = the zd-td name you are using, as in zd-movies, zd-tv,zd-tv2
-#
-while getopts s:c:t:u:p:o:z:w:r:a: option; do 
+while getopts s:c:t:u:d:h:p:o:z:w:r:a: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
         t) TRIGGER=${OPTARG};;
         u) URL=${OPTARG};;
+        d) DAYSAGO=${OPTARG};;
+        h) HOURSAGO=${OPTARG};;
         p) USERPASS=${OPTARG};;
         o) DOCKERNAME=${OPTARG};;
         z) PLEXDB=${OPTARG};;
@@ -27,7 +24,6 @@ done
 
 get_files ()
 {
-  declare -a file_list
   case $TRIGGER in
           movie)
                   depth=2
@@ -50,6 +46,10 @@ get_files ()
   file_list=()
   for i in "${filelist[@]}"
   do
+     #printf '%s\n' "${i[@]}"
+     #filesize=("$(cut -d '|' -f2 <<< "$i")")
+     #filepath=("$(cut -d '|' -f1 <<< "$i")")
+     #file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${filepath}|${filesize}")
      file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
   done
 }
@@ -139,6 +139,6 @@ do
   g=${i2//[$'\t\r\n']}
   echo "${g}"
   c=$[$c +1]
-  process_autoscan "${g}"; 
+  #process_autoscan "${g}"; 
 done
 echo "${c} files processed"
