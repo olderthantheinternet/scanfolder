@@ -135,6 +135,10 @@ do
   g=${i2//[$'\t\r\n']}
   #echo "${g}"
   c=$[$c +1]
-  process_autoscan "${g}"; 
+  if [ ${depth} == 3 ] && [ ${c} > 1 ]; then
+     process_autoscan "${g}";
+  elif [ ${depth} == 2 ]; then
+     process_autoscan "${g}";
+  fi
 done
 echo "${c} files processed"
