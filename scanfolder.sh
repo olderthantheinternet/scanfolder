@@ -133,7 +133,7 @@ c=1
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
-  if [ "${g}" == "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; the
+  if [ "${g}" == "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
      #skip
   else
      process_autoscan "${g}";
