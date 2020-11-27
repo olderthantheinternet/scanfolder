@@ -1,18 +1,15 @@
 #!/bin/bash
 # cd /mnt/unionfs
-# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -d 2 -h 3 -p usernamepassword -o plex -z '/path to plex db/' -w 10
-# -d, -h, and -p are optional
-# and when using -d or -h, you only use one - not both
-# -d = days ago and -h = hours ago
+# bash -x /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2
 #-w = second to wait between sends to autoscan
-while getopts s:c:t:u:d:h:p:o:z:w:r:a: option; do 
+#-r = RCLONE mount, like zendrive or zd_storage
+#-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
+while getopts s:c:t:u:p:o:z:w:r:a: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
         t) TRIGGER=${OPTARG};;
         u) URL=${OPTARG};;
-        d) DAYSAGO=${OPTARG};;
-        h) HOURSAGO=${OPTARG};;
         p) USERPASS=${OPTARG};;
         o) DOCKERNAME=${OPTARG};;
         z) PLEXDB=${OPTARG};;
