@@ -37,7 +37,7 @@ get_files ()
                   ;;
   esac
   IFS=$'\n' 
-  filelist=($(rclone lsf --files-only --max-depth "$depth" --format ps --separator "|" --absolute "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+  filelist=($(rclone lsf --files-only --max-depth "$depth" --format ps --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
   unset IFS
   file_list=()
   for i in "${filelist[@]}"
