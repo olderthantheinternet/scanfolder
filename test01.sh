@@ -43,21 +43,20 @@ get_files ()
                   echo "Media type specified unknown"
                   exit;
                   ;;
-        esac
+  esac
   IFS=$'\n' 
-  filelist=($(rclone lsf --files-only --max-depth "$depth" --format sp --separator "|" --absolute "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+  filelist=($(rclone lsf --files-only --max-depth "$depth" --format ps --separator "|" --absolute "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
   unset IFS
+  file_list=()
   for i in "${filelist[@]}"
   do
-     filesize=($(cut -d '|' -f1 <<< "$i"))
-     filepath=("$(cut -d '|' -f2 <<< "$i")")
-     file_list+=("${filesize}|${CONTAINER_FOLDER}${SOURCE_FOLDER}${filepath}")
+     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
   done
 }
 
 get_db_items ()
 { 
-         cmd="select m.size,p.file from media_items m inner join media_parts p on m.id=p.media_item_id WHERE p.file LIKE '%$SOURCE_FOLDER/%'"
+         cmd="select p.file,m.size from media_items m inner join media_parts p on m.id=p.media_item_id WHERE p.file LIKE '%$SOURCE_FOLDER/%'"
          if [ ! -z "$PLEXDB" ]
          then
              plex="${PLEXDB}com.plexapp.plugins.library.db"
@@ -121,19 +120,25 @@ process_autoscan () {
 
 get_files
 get_db_items
-readarray -t missing_files < <(printf '%s\n' "${db_list[@]}" "${file_list[@]}" | sort -u | uniq -u)
+IFS=$'\n'
+mapfile -t missing_files < <( comm -13 <(printf '%s\n' "${db_list[@]}" | LC_ALL=C sort) <(printf '%s\n' "${file_list[@]}" | LC_ALL=C sort) )
+unset IFS
 declare -a farray
 for i in "${missing_files[@]}"; 
 do
-  f=("$(cut -d '|' -f2 <<< "$i")");
+  f=("$(cut -d '|' -f1 <<< "$i")");
   f=${f//[$'\t\r\n']}
   farray+=("$(dirname "${f}")")
 done
 IFS=$'\n'
 readarray -t uniq < <(printf '%s\n' "${farray[@]}" | sort -u)
 unset IFS
+c=1
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
+  echo "${g}"
+  c=$[$c +1]
   process_autoscan "${g}"; 
 done
+echo "${c} files processed"
