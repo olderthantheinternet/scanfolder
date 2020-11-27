@@ -137,8 +137,8 @@ c=1
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
-  echo "${g}"
+  #echo "${g}"
   c=$[$c +1]
-  #process_autoscan "${g}"; 
+  process_autoscan "${g}"; 
 done
 echo "${c} files processed"
