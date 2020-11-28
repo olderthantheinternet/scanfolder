@@ -1,10 +1,8 @@
 #!/bin/bash
-# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 -d 2 (or -h 5)
+# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 
 #-w = second to wait between sends to autoscan
 #-r = RCLONE mount, like zendrive or zd_storage
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
-#-d = MAX AGE in Days
-#-h = MAX AGE in Hours
 while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
@@ -41,24 +39,21 @@ get_files ()
                   exit;
                   ;;
   esac
-  IFS=$'\n' 
-  unset MAXAGE
-  if [ ! -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then 
-     echo "Please no not use DAYS & HOURS together, you filthy animal";
-  fi
-  if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
-     MAXAGE="--max-age ${DAYS}d"
-  fi
-  if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
-     MAXAGE="--max-age ${HOURS}h"
-  fi
-  filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format ps --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
-  unset IFS
-  file_list=()
-  for i in "${filelist[@]}"
-  do
-     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
+  #IFS=$'\n' 
+  #filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format ps --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+  #unset IFS
+  #file_list=()
+  #for i in "${filelist[@]}"
+  #do
+  #   file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
+  #done
+  
+  DIR="${CONTAINER_FOLDER}${SOURCE_FOLDER}"
+  find "$DIR" -maxdepth "${depth}" -type f | while read filename; do
+    FILESIZE=$(stat -c "%s" "$filename")  # get file size
+    echo "$filename|$FILESIZE"
   done
+  exit;
 }
 
 get_db_items ()
