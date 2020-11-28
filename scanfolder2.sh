@@ -42,13 +42,10 @@ get_files ()
   #done
   
   DIR="${CONTAINER_FOLDER}${SOURCE_FOLDER}"
-  file_list=()
-  IFS=$'\n'
-  find "$DIR" -maxdepth "${depth}" -type f | while read filename; 
-  unset IFS
-  do
+  declare -a file_list
+  find "$DIR" -maxdepth "${depth}" -type f | while read filename; do
     FILESIZE=$(stat -c "%s" "$filename")  # get file size
-    file_list+=("${filename}|${FILESIZE}")
+    file_list+=( "${filename}|${FILESIZE} )
   done
   printf '%s\n' "${file_list[@]}"
   exit;
