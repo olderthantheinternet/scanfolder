@@ -1,9 +1,7 @@
 #!/bin/bash
-# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 
+# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 
 #-w = second to wait between sends to autoscan
-#-r = RCLONE mount, like zendrive or zd_storage
-#-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
-while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do 
+while getopts s:c:t:u:p:o:z:w: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -13,11 +11,6 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do
         o) DOCKERNAME=${OPTARG};;
         z) PLEXDB=${OPTARG};;
         w) WAIT=${OPTARG};;
-        r) RCLONEMOUNT=${OPTARG};;
-        a) ZDTD=${OPTARG};;
-        d) DAYS=${OPTARG};;
-        h) HOURS=${OPTARG};;
-        
      esac
 done
 
@@ -49,10 +42,12 @@ get_files ()
   #done
   
   DIR="${CONTAINER_FOLDER}${SOURCE_FOLDER}"
+  file_list=()
   find "$DIR" -maxdepth "${depth}" -type f | while read filename; do
     FILESIZE=$(stat -c "%s" "$filename")  # get file size
-    echo "$filename|$FILESIZE"
+    file_list+=("${filename}|${FILESIZE}")
   done
+  printf '%s\n' "${file_list[@]}"
   exit;
 }
 
