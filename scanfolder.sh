@@ -52,7 +52,7 @@ get_files ()
   if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
      MAXAGE="--max-age ${HOURS}h"
   fi
-  filelist=($(rclone lsf --files-only --absolute "$MAXAGE" --max-depth "$depth" --format ps --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+  filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format ps --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
   unset IFS
   file_list=()
   for i in "${filelist[@]}"
