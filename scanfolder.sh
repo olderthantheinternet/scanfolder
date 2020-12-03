@@ -1,11 +1,9 @@
 #!/bin/bash
-# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 -d 2 (or -h 5)
+# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2
 #-w = second to wait between sends to autoscan
 #-r = RCLONE mount, like zendrive or zd_storage
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
-#-d = MAX AGE in Days
-#-h = MAX AGE in Hours
-while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do 
+while getopts s:c:t:u:p:o:z:w:r:a: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -17,9 +15,7 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do
         w) WAIT=${OPTARG};;
         r) RCLONEMOUNT=${OPTARG};;
         a) ZDTD=${OPTARG};;
-        d) DAYS=${OPTARG};;
-        h) HOURS=${OPTARG};;
-        
+               
      esac
 done
 
@@ -42,17 +38,7 @@ get_files ()
                   ;;
   esac
   IFS=$'\n' 
-  unset MAXAGE
-  if [ ! -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then 
-     echo "Please no not use DAYS & HOURS together, you filthy animal";
-  fi
-  if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
-     MAXAGE="--max-age ${DAYS}d"
-  fi
-  if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
-     MAXAGE="--max-age ${HOURS}h"
-  fi
-  filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format ps --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+  filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
   unset IFS
   file_list=()
   for i in "${filelist[@]}"
@@ -63,7 +49,7 @@ get_files ()
 
 get_db_items ()
 { 
-         cmd="select p.file,m.size from media_items m inner join media_parts p on m.id=p.media_item_id WHERE p.file LIKE '%$SOURCE_FOLDER/%'"
+         cmd="select p.file,p.created_at from media_items m inner join media_parts p on m.id=p.media_item_id WHERE p.file LIKE '%$SOURCE_FOLDER/%'"
          if [ ! -z "$PLEXDB" ]
          then
              plex="${PLEXDB}com.plexapp.plugins.library.db"
