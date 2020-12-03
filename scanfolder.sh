@@ -111,6 +111,17 @@ process_autoscan () {
         fi
 }
 
+autoscan_check ()
+{
+         sql="SELECT EXISTS(SELECT 1 scan WHERE u_tag=folder like '"${1}"' LIMIT 1)"
+         scan="/opt/autoscan/autoscan.db"
+         check=0
+         if [ "`sqlite3 "$scan" "$sql"`" != "0" ]
+         then
+            check=1
+         fi
+}
+
 get_files
 get_db_items
 IFS=$'\n'
@@ -131,7 +142,10 @@ for i2 in "${uniq[@]}";
 do 
   g=${i2//[$'\t\r\n']}
   if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
-     process_autoscan "${g}";
+     autoscan_check "${g}";
+     if[ $check == 0 ]; then
+        process_autoscan "${g}";
+     fi
   fi
   c=$[$c +1]
 done
