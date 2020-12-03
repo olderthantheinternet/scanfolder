@@ -140,7 +140,8 @@ unset IFS
 c=1
 for i2 in "${uniq[@]}"; 
 do 
-  g=${i2//[$'\t\r\n']}
+  g1=${i2//[$'\t\r\n']}
+  g=g1.replace(/\'/g,"''")
   if [ ! -z "$g" ]; then
      if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
         autoscan_check
