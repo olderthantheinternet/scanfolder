@@ -143,7 +143,7 @@ do
   g=${i2//[$'\t\r\n']}
   if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
      autoscan_check "${g}";
-     if[ $check = 0 ]; then
+     if [ "$check" -eq "0" ]; then
         process_autoscan "${g}";
      fi
   fi
