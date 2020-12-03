@@ -43,8 +43,7 @@ get_files ()
   file_list=()
   for i in "${filelist[@]}"
   do
-     i2="${i//\'/''}"
-     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i2}")
+     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
   done
 }
 
@@ -114,7 +113,8 @@ process_autoscan () {
 
 autoscan_check ()
 {
-         sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '%$g%' LIMIT 1)"
+         i3="${g//\'/''}"
+         sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '%$i3%' LIMIT 1)"
          scan="/opt/autoscan/autoscan.db"
          check=0
          if [ "`sqlite3 "$scan" "$sql"`" != "0" ]
