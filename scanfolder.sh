@@ -111,6 +111,18 @@ process_autoscan () {
         fi
 }
 
+autoscan_check ()
+{
+         i3="${g//\'/''}"
+         sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '%$i3%' LIMIT 1)"
+         scan="/opt/autoscan/autoscan.db"
+         check=0
+         if [ "`sqlite3 "$scan" "$sql"`" != "0" ]
+         then
+            check=1
+         fi
+}
+
 get_files
 get_db_items
 IFS=$'\n'
@@ -130,9 +142,14 @@ c=1
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
-  if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
-     process_autoscan "${g}";
+  if [ ! -z "$g" ]; then
+     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
+        autoscan_check
+        if [ "$check" -eq "0" ]; then
+           process_autoscan "${g}";
+        fi
+     fi
+     c=$[$c +1]
   fi
-  c=$[$c +1]
 done
 echo "${c} files processed"
