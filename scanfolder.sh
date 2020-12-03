@@ -113,7 +113,7 @@ process_autoscan () {
 
 autoscan_check ()
 {
-         sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '"${g}"' LIMIT 1)"
+         sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '%"$g"%' LIMIT 1)"
          scan="/opt/autoscan/autoscan.db"
          check=0
          if [ "`sqlite3 "$scan" "$sql"`" != "0" ]
