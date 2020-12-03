@@ -141,7 +141,7 @@ c=1
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
-  if [ ! -z "$g" ]
+  if [ ! -z "$g" ]; then
      if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
         autoscan_check
         if [ "$check" -eq "0" ]; then
