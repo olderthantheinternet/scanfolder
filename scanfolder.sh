@@ -15,6 +15,7 @@ while getopts s:c:t:u:p:o:z:w:r:a: option; do
         w) WAIT=${OPTARG};;
         r) RCLONEMOUNT=${OPTARG};;
         a) ZDTD=${OPTARG};;
+               
      esac
 done
 
@@ -37,22 +38,18 @@ get_files ()
                   ;;
   esac
   IFS=$'\n' 
-  filelist=($(rclone lsf --files-only --max-depth "$depth" --format ps --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+  filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
   unset IFS
   file_list=()
   for i in "${filelist[@]}"
   do
-     #printf '%s\n' "${i[@]}"
-     #filesize=("$(cut -d '|' -f2 <<< "$i")")
-     #filepath=("$(cut -d '|' -f1 <<< "$i")")
-     #file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${filepath}|${filesize}")
-     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}/${i}")
+     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
   done
 }
 
 get_db_items ()
 { 
-         cmd="select p.file,m.size from media_items m inner join media_parts p on m.id=p.media_item_id WHERE p.file LIKE '%$SOURCE_FOLDER/%'"
+         cmd="select p.file,p.created_at from media_items m inner join media_parts p on m.id=p.media_item_id WHERE p.file LIKE '%$SOURCE_FOLDER/%'"
          if [ ! -z "$PLEXDB" ]
          then
              plex="${PLEXDB}com.plexapp.plugins.library.db"
