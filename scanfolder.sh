@@ -141,12 +141,14 @@ c=1
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
-  if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
-     autoscan_check
-     if [ "$check" -eq "0" ]; then
-        process_autoscan "${g}";
+  if [ ! -z "$g" ]
+     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
+        autoscan_check
+        if [ "$check" -eq "0" ]; then
+           process_autoscan "${g}";
+        fi
      fi
+     c=$[$c +1]
   fi
-  c=$[$c +1]
 done
 echo "${c} files processed"
