@@ -43,7 +43,8 @@ get_files ()
   file_list=()
   for i in "${filelist[@]}"
   do
-     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
+     i2="${i//\'/''}"
+     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i2}")
   done
 }
 
@@ -140,8 +141,7 @@ unset IFS
 c=1
 for i2 in "${uniq[@]}"; 
 do 
-  g1=${i2//[$'\t\r\n']}
-  g=g1.replace(/\'/g,"''")
+  g=${i2//[$'\t\r\n']}
   if [ ! -z "$g" ]; then
      if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
         autoscan_check
