@@ -26,7 +26,6 @@ process_diff ()
              plex="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
         fi
         unset cmd
-        IFS=$'\n'
         case $MEDIATYPE in
           movie)
 cmd="SELECT \
@@ -72,7 +71,7 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
         esac
         echo "${cmd}"
         db_list=()
-        
+        IFS=$'\n'
         fqry=(`sqlite3 "$plex" "$cmd"`)
         unset IFS
         for f in "${fqry[@]}"; do
