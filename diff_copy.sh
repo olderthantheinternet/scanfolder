@@ -85,7 +85,6 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
                   exit;
                   ;;
         esac
-        echo "${cmd}"
         db_list=()
         IFS=$'\n'
         fqry=(`sqlite3 "$plex" "$cmd"`)
