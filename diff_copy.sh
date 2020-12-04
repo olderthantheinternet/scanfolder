@@ -13,8 +13,8 @@ done
 
 send_to_rclone ()
 {
-  rclone copy "$YOURRCLONE$1" "$ZDRCLONE" -vP --stats=10s --drive-use-trash=false --drive-server-side-across-configs=true \
-     --transfers 16 --checkers=16 --use-mmap  --max-backlog=2000000 --tpslimit 4 --tpslimit-burst 32  
+  rclone copy "$YOURRCLONE$1" "$ZDRCLONE" -vP --stats=10s --drive-use-trash=false \
+     --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32  
 }
 
 process_diff ()
