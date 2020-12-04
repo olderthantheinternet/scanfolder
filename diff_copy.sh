@@ -14,7 +14,7 @@ done
 send_to_rclone ()
 {
   DESTP=$(dirname "${$1}")
-  rclone copy "$YOURRCLONE$1" "$ZDRCLONE/$DESTP" -vP --stats=10s --drive-use-trash=false \
+  rclone copy \""$YOURRCLONE$1"\" \""$ZDRCLONE/$DESTP"\" -vP --stats=10s --drive-use-trash=false \
      --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32  
 }
 
