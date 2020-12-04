@@ -13,8 +13,15 @@ done
 
 send_to_rclone ()
 {
-  DESTP=$(dirname "${1}")
-  PUSH=$(rclone copy "${YOURRCLONE}${1}" "${ZDRCLONE}/${DESTP}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)   
+  case $MEDIATYPE in
+          movie)
+             DESTP=$(dirname "${1}")
+             PUSH=$(rclone copy "${YOURRCLONE}${1}" "${ZDRCLONE}/${DESTP}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
+             ;;
+          tv|television|series)
+             DESTP=$(basename "${1}")
+             PUSH=$(rclone copy "${YOURRCLONE}${DESTP}" "${ZDRCLONE}/${DESTP}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
+             ;;
 }
 
 process_diff ()
