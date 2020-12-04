@@ -13,7 +13,7 @@ done
 
 send_to_rclone ()
 {
-  rclone copy "$YOURRCLONE$1" "$ZDRCLONE" -vP --stats=10s --drive-use-trash=false --drive-server-side-across-configs=true \
+  rclone copy '"$YOURRCLONE$1"' '"$ZDRCLONE"' -vP --stats=10s --drive-use-trash=false --drive-server-side-across-configs=true \
      --transfers 16 --checkers=16 --use-mmap  --max-backlog=2000000 --tpslimit 4 --tpslimit-burst 32  
 }
 
@@ -62,8 +62,7 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
         unset IFS
         for f in "${fqry[@]}"; do
           f=${f//[$'\t\r\n']}
-          f=$(dirname "${f}")
-          f=$(basename "${f}")
+          f="$(dirname "${f}")/$(basename "${f}")"
           db_list+=("${f}")
         done
 }
