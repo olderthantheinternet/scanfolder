@@ -61,20 +61,20 @@ process_diff ()
 {
         case $MEDIATYPE in
           movie)
-                  sql="SELECT " \ 
-                  "p.file " \
-                  "FROM metadata_items md " \
-                  "inner join media_items m ON m.metadata_item_id=md.id " \
-                  "inner join media_parts p on m.id=p.media_item_id " \
-                  "WHERE md.library_section_id = '$SECID' and md.guid NOT IN " \
-                  "( " \
-                  "  SELECT " \ 
-                  "  md2.guid " \
-                  "  FROM metadata_items md2 " \
-                  "  inner join media_items m2 ON m2.metadata_item_id=md2.id " \
-                  "  inner join media_parts p2 on m2.id=p2.media_item_id " \
-                  "  WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' " \
-                  ") "
+                  sql="SELECT \ 
+                  p.file \
+                  FROM metadata_items md \
+                  inner join media_items m ON m.metadata_item_id=md.id \
+                  inner join media_parts p on m.id=p.media_item_id \
+                  WHERE md.library_section_id = '$SECID' and md.guid NOT IN \
+                  ( \
+                    SELECT \ 
+                    md2.guid \
+                    FROM metadata_items md2 \
+                    inner join media_items m2 ON m2.metadata_item_id=md2.id \
+                    inner join media_parts p2 on m2.id=p2.media_item_id \
+                    WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
+                  ) "
                   ;;
           tv|television|series)
                   sql=""
