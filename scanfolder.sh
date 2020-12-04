@@ -42,7 +42,7 @@ get_files ()
                   exit;
                   ;;
   esac
-   unset MAXAGE
+  unset MAXAGE
   if [ ! -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then 
      echo "Please no not use DAYS & HOURS together, you filthy animal";
   fi
@@ -50,10 +50,17 @@ get_files ()
     IFS=$'\n' 
     filelist=($(rclone lsf --files-only --absolute --max-age "${DAYS}d" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
+    MAXAGE=1
   fi
   if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
     IFS=$'\n' 
     filelist=($(rclone lsf --files-only --absolute --max-age "${HOURS}h" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+    unset IFS
+    MAXAGE=1
+  fi
+  if [ -z ${MAXAGE+x} ]; then
+     IFS=$'\n' 
+    filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
   fi
   file_list=()
