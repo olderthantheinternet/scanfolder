@@ -98,7 +98,7 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
         esac
         db_list=()
         IFS=$'\n'
-        fqry=$(`sqlite3 "$plex" "$cmd"`)
+        fqry=(`sqlite3 "$plex" "$cmd"`)
         unset IFS
         for f in "${fqry[@]}"; do
           f=${f//[$'\t\r\n']}
