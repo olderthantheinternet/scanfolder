@@ -82,6 +82,7 @@ process_diff ()
                     inner join media_parts p2 on m2.id=p2.media_item_id \
                     WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
                   )"
+                  echo "${cmd}"
                   ;;
           tv|television|series)
                   cmd=""
