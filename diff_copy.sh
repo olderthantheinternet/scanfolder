@@ -65,29 +65,26 @@ process_diff ()
          else
              plex="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
         fi
-        IFS=$'\n'
+        unset cmd
         case $MEDIATYPE in
           movie)
-                  fqry=$(sqlite3 "$plex" <<END
-                  SELECT  
-                  p.file 
-                  FROM metadata_items md
-                  inner join media_items m ON m.metadata_item_id=md.id
-                  inner join media_parts p on m.id=p.media_item_id
-                  WHERE md.library_section_id = '$SECID' and md.guid NOT IN 
-                  ( 
-                    SELECT
-                    md2.guid
-                    FROM metadata_items md2
-                    inner join media_items m2 ON m2.metadata_item_id=md2.id
-                    inner join media_parts p2 on m2.id=p2.media_item_id
-                    WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%'
-                  );
-                  END
-                  )
+                  cmd="SELECT \  
+                  p.file \ 
+                  FROM metadata_items md \
+                  inner join media_items m ON m.metadata_item_id=md.id \
+                  inner join media_parts p on m.id=p.media_item_id \
+                  WHERE md.library_section_id = '$SECID' and md.guid NOT IN \ 
+                  ( \ 
+                    SELECT \
+                    md2.guid \
+                    FROM metadata_items md2 \
+                    inner join media_items m2 ON m2.metadata_item_id=md2.id \
+                    inner join media_parts p2 on m2.id=p2.media_item_id \
+                    WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
+                  )"
                   ;;
           tv|television|series)
-                  sql=""
+                  cmd=""
                   ;;
           '')
                   echo "Media type parameter is empty"
@@ -99,13 +96,14 @@ process_diff ()
                   ;;
         esac
         db_list=()
+        IFS=$'\n'
+        fqry=$(`sqlite3 "$plex" "$cmd"`)
         unset IFS
         for f in "${fqry[@]}"; do
           f=${f//[$'\t\r\n']}
           db_list+=("$(dirname "${f}")")
         done
 }
-
 
 process_diff
 printf '%s\n' "${db_list[@]}"
