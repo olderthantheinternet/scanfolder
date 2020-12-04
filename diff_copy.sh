@@ -59,22 +59,31 @@ get_db_items ()
 
 process_diff ()
 {
+        if [ ! -z "$PLEXDB" ]
+         then
+             plex="${PLEXDB}com.plexapp.plugins.library.db"
+         else
+             plex="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+        fi
+        IFS=$'\n'
         case $MEDIATYPE in
           movie)
-                  sql="SELECT \ 
-                  p.file \
-                  FROM metadata_items md \
-                  inner join media_items m ON m.metadata_item_id=md.id \
-                  inner join media_parts p on m.id=p.media_item_id \
-                  WHERE md.library_section_id = '$SECID' and md.guid NOT IN \
-                  ( \
-                    SELECT \ 
-                    md2.guid \
-                    FROM metadata_items md2 \
-                    inner join media_items m2 ON m2.metadata_item_id=md2.id \
-                    inner join media_parts p2 on m2.id=p2.media_item_id \
-                    WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
-                  ) "
+                  fqry=(`sqlite3 "$plex" <<END
+                  SELECT  
+                  p.file 
+                  FROM metadata_items md
+                  inner join media_items m ON m.metadata_item_id=md.id
+                  inner join media_parts p on m.id=p.media_item_id
+                  WHERE md.library_section_id = '$SECID' and md.guid NOT IN 
+                  ( 
+                    SELECT
+                    md2.guid
+                    FROM metadata_items md2
+                    inner join media_items m2 ON m2.metadata_item_id=md2.id
+                    inner join media_parts p2 on m2.id=p2.media_item_id
+                    WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%'
+                  )exit;
+                  END
                   ;;
           tv|television|series)
                   sql=""
@@ -88,15 +97,7 @@ process_diff ()
                   exit;
                   ;;
         esac
-        if [ ! -z "$PLEXDB" ]
-         then
-             plex="${PLEXDB}com.plexapp.plugins.library.db"
-         else
-             plex="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
-        fi
         db_list=()
-        IFS=$'\n'
-        fqry=(`sqlite3 "$plex" "$cmd"`)
         unset IFS
         for f in "${fqry[@]}"; do
           f=${f//[$'\t\r\n']}
