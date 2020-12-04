@@ -62,7 +62,6 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
         unset IFS
         for f in "${fqry[@]}"; do
           f=${f//[$'\t\r\n']}
-          f="$(dirname "${f}")/$(basename "${f}")"
           db_list+=("${f}")
         done
 }
@@ -75,5 +74,9 @@ unset IFS
 c=1
 for i2 in "${uniq[@]}"; 
 do 
-  send_to_rclone "${i2}"
+  fname=$(basename "${i2}")
+  path=$(dirname "${i2}")
+  path=$(basename "${path}")
+  f="${path}/${fname}"
+  send_to_rclone "${f}"
 done
