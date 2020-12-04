@@ -22,6 +22,15 @@ send_to_rclone ()
              DESTP=$(basename "${1}")
              PUSH=$(rclone copy "${YOURRCLONE}${DESTP}" "${ZDRCLONE}/${DESTP}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
              ;;
+          '')
+                  echo "Media type parameter is empty"
+                  exit;
+                  ;;
+          *)
+                  echo "Media type specified unknown"
+                  exit;
+                  ;;
+        esac
 }
 
 process_diff ()
