@@ -102,7 +102,7 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
         unset IFS
         for f in "${fqry[@]}"; do
           f=${f//[$'\t\r\n']}
-          db_list+=("$(dirname "${f}")")
+          db_list+=(basename("$(dirname "${f}")"))
         done
 }
 
