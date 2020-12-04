@@ -7,7 +7,10 @@ this will compare the contents of a folder against your plex database and add an
 #-w = second to wait between sends to autoscan
 #-r = RCLONE mount, like zendrive or zd_storage
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
-while getopts s:c:t:u:p:o:z:w:r:a: option; do 
+#-d = integer for number of days
+#-h = integer for number of hours
+# do not use both -d & -h
+while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -19,7 +22,8 @@ while getopts s:c:t:u:p:o:z:w:r:a: option; do
         w) WAIT=${OPTARG};;
         r) RCLONEMOUNT=${OPTARG};;
         a) ZDTD=${OPTARG};;
-     esac
+        d) DAYS=${OPTARG};;
+        h) HOURS=${OPTARG};;
 done
 ```
 SOURCE_FOLDER = the folder you want scanfolder to look at "/tv/10s" or "/movies/10s" 
@@ -41,6 +45,10 @@ WAIT = the number of seconds to wait between sending to autoscan
 RCLONEMOUNT = RCLONE mount, like zendrive or zd_storage
 
 ZDTD = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
+
+DAYS = max days to go back
+
+HOURS = max hours to go back
 
 So for TV it would look like:
 ```
