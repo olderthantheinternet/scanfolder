@@ -150,11 +150,9 @@ autoscan_check ()
          sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '%$i3%' LIMIT 1)"
          scan="/opt/autoscan/autoscan.db"
          check=0
-         if [ "`sqlite3 "$scan" "$sql"`" != "0" ]
+         if [ "`sqlite3 "$scan" "$sql"`" != "0" ] && [ "$g" != "." ]
          then
             check=1
-         elif [ "$g" != "." ]; then
-            check=0
          fi
 }
 
