@@ -70,6 +70,7 @@ get_files ()
   for i in "${filelist[@]}"
   do
      FOO=$(basename "${i}")
+     echo "$FOO"
      FOO="$(echo -e "${FOO}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
      FOO=${#FOO}  
      F2=1
