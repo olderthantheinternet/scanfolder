@@ -69,7 +69,13 @@ get_files ()
   file_list=()
   for i in "${filelist[@]}"
   do
-     file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
+     FOO=$(basename "${i}")     
+     FOO="$(echo -e "${FOO}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+     FOO=${#FOO}  
+     F2=1
+     if [ "$FOO" -gt "$F2" ]; then        
+        file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
+     fi
   done
 }
 
@@ -152,16 +158,18 @@ autoscan_check ()
          check=0
          FOO="$(echo -e "${g}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
          FOO=${#FOO}  
-        if [ "`sqlite3 "$scan" "$sql"`" != "0" ] && [ $FOO > 2 ]
+         F2=1
+         if [ "`sqlite3 "$scan" "$sql"`" != "0" ] && [ "$FOO" -gt "$F2" ]
          then
             check=1
          fi
 }
 
 get_files
+[[ ${#file_list[@]} -eq 0 ]] && { echo "No new media to process"; exit 1; }
 get_db_items
 IFS=$'\n'
-mapfile -t missing_files < <( comm -13 <(printf '%s\n' "${db_list[@]}" | LC_ALL=C sort) <(printf '%s\n' "${file_list[@]}" | LC_ALL=C sort) )
+mapfile -t missing_files < <( comm -13 --nocheck-order <(printf '%s\n' "${db_list[@]}" | LC_ALL=C sort) <(printf '%s\n' "${file_list[@]}" | LC_ALL=C sort) )
 unset IFS
 declare -a farray
 for i in "${missing_files[@]}"; 
