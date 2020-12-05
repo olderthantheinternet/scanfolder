@@ -109,7 +109,7 @@ process_autoscan () {
           music)
                   arrType="lidarr"
                   folderPath=$(dirname "$1")
-                  trackPath=$(basename "$1")
+                  trackPath="$1"
                   relativePath=$(basename "$folderPath")
                   jsonData='{"eventType": "Download", "isUpgrade": false, "trackFiles": [{ "path": "'"$trackPath"'" }],"artist": {"name": "'"$relativePath"'","path": "'"$folderPath"'"}}'
                   ;;
@@ -168,6 +168,7 @@ do
   f=${f//[$'\t\r\n']}
   if [ "$TRIGGER" -eq "music" ]; then
     echo "skip"
+    farray+=("${f}")
   else
     farray+=("$(dirname "${f}")")
   fi
