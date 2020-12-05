@@ -168,8 +168,7 @@ autoscan_check ()
 }
 
 get_files
-printf '%s\n' "${file_list[@]}"
-[[ -z "$file_list" ]] && { echo "No new media to process"; exit 1; }
+[[ ${#file_list[@]} -eq 0 ]] && { echo "No new media to process"; exit 1; }
 exit;
 get_db_items
 IFS=$'\n'
