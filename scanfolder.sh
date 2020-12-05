@@ -69,13 +69,11 @@ get_files ()
   file_list=()
   for i in "${filelist[@]}"
   do
-     FOO=$(basename "${i}")
-     echo "${FOO}"
+     FOO=$(basename "${i}")     
      FOO="$(echo -e "${FOO}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
      FOO=${#FOO}  
      F2=1
-     if [ "$FOO" -gt "$F2" ]; then
-        echo "not a dot"
+     if [ "$FOO" -gt "$F2" ]; then        
         file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
      fi
   done
@@ -169,7 +167,6 @@ autoscan_check ()
 
 get_files
 [[ ${#file_list[@]} -eq 0 ]] && { echo "No new media to process"; exit 1; }
-exit;
 get_db_items
 IFS=$'\n'
 mapfile -t missing_files < <( comm -13 --nocheck-order <(printf '%s\n' "${db_list[@]}" | LC_ALL=C sort) <(printf '%s\n' "${file_list[@]}" | LC_ALL=C sort) )
