@@ -53,10 +53,11 @@ DAYS = max days to go back
 HOURS = max hours to go back
 
 UPDATE:  LIDARR is now supported
-your -s & -a flags should like something like
+your -s & -a & -t flags should like something like
 ```
 -s audiobooks/Audiobooks_English
 -a zd-audiobooks
+-t music
 ```
 
 So for TV it would look like:
