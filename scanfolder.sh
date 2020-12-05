@@ -151,8 +151,9 @@ autoscan_check ()
          scan="/opt/autoscan/autoscan.db"
          check=0
          FOO="$(echo -e "${g}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+         FOO=${#FOO}  
          echo "$FOO"
-         if [ "`sqlite3 "$scan" "$sql"`" != "0" ] && [ $FOO != "." ]
+         if [ "`sqlite3 "$scan" "$sql"`" != "0" ] && [ $FOO > 2 ]
          then
             check=1
          fi
