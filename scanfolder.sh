@@ -166,7 +166,7 @@ autoscan_check ()
 }
 
 get_files
-[[ ${#file_list[@]} -eq 0 ]] && { echo "No new media to process"; exit 1; }
+[[ ${#file_list[@]} -eq 0 ]] && { echo "No new media to process"; exit; }
 get_db_items
 IFS=$'\n'
 mapfile -t missing_files < <( comm -13 --nocheck-order <(printf '%s\n' "${db_list[@]}" | LC_ALL=C sort) <(printf '%s\n' "${file_list[@]}" | LC_ALL=C sort) )
