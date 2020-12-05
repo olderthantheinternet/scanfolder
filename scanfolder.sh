@@ -153,6 +153,8 @@ autoscan_check ()
          if [ "`sqlite3 "$scan" "$sql"`" != "0" ]
          then
             check=1
+         elif [ "$g" != "." ]; then
+            check=0
          fi
 }
 
