@@ -108,9 +108,10 @@ process_autoscan () {
                   ;;
           music)
                   arrType="lidarr"
-                  folderPath="$1"
+                  folderPath=$(dirname "$1")
+                  trackPath=$(basename "$1")
                   relativePath=$(basename "$folderPath")
-                  jsonData='{"eventType": "Download", "isUpgrade": false, "trackFiles": [{ "path": "" }],"artist": {"name": "'"$relativePath"'","path": "'"$folderPath"'"}'
+                  jsonData='{"eventType": "Download", "isUpgrade": false, "trackFiles": [{ "path": "'"$trackPath"'" }],"artist": {"name": "'"$relativePath"'","path": "'"$folderPath"'"}}'
                   ;;
           '')
                   echo "Media type parameter is empty"
@@ -165,7 +166,11 @@ for i in "${missing_files[@]}";
 do
   f=("$(cut -d '|' -f1 <<< "$i")");
   f=${f//[$'\t\r\n']}
-  farray+=("$(dirname "${f}")")
+  if [ "$TRIGGER" -eq "music" ]; then
+    echo "skip"
+  else
+    farray+=("$(dirname "${f}")")
+  fi
 done
 IFS=$'\n'
 readarray -t uniq < <(printf '%s\n' "${farray[@]}" | sort -u)
