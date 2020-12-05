@@ -33,6 +33,9 @@ get_files ()
           tv|television|series)
                   depth=3
                   ;;
+           music)
+                  depth=3
+                  ;;
           '')
                   echo "Media type parameter is empty"
                   exit;
@@ -102,6 +105,12 @@ process_autoscan () {
                   folderPath="$1"
                   relativePath=$(basename "$folderPath")
                   jsonData='{"eventType": "Download","episodeFile": {"relativePath": "'"$relativePath"'"},"series": {"path": "'"$folderPath"/'"}}'
+                  ;;
+          music)
+                  arrType="lidarr"
+                  folderPath="$1"
+                  relativePath=$(basename "$folderPath")
+                  jsonData='{"eventType": "Download", "isUpgrade": false, "trackFiles": [{ "path": "" }],"artist": {"name": "'"$relativePath"'","path": "'"$folderPath"'"}'
                   ;;
           '')
                   echo "Media type parameter is empty"
