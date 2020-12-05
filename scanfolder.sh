@@ -166,7 +166,7 @@ for i in "${missing_files[@]}";
 do
   f=("$(cut -d '|' -f1 <<< "$i")");
   f=${f//[$'\t\r\n']}
-  if [ "$TRIGGER" -eq "music" ]; then
+  if [ $TRIGGER == "music" ]; then
     echo "skip"
     farray+=("${f}")
   else
