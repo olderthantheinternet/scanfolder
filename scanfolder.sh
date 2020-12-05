@@ -70,7 +70,7 @@ get_files ()
   for i in "${filelist[@]}"
   do
      FOO=$(basename "${i}")
-     echo "$FOO"
+     echo "${FOO}"
      FOO="$(echo -e "${FOO}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
      FOO=${#FOO}  
      F2=1
@@ -168,6 +168,8 @@ autoscan_check ()
 }
 
 get_files
+printf '%s\n' "${file_list[@]}"
+exit;
 get_db_items
 IFS=$'\n'
 mapfile -t missing_files < <( comm -13 --nocheck-order <(printf '%s\n' "${db_list[@]}" | LC_ALL=C sort) <(printf '%s\n' "${file_list[@]}" | LC_ALL=C sort) )
