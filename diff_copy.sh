@@ -107,7 +107,7 @@ do
 
   tv_folder="${i2%/*}"       
   season="${tv_folder##*/}"  
-  show="${tv_folder###*/}"
+  show="${tv_folder#*/}"
   f1="${path}/${fname}" 
   f2="${show}/${season}/${fname}"
   
