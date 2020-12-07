@@ -103,8 +103,9 @@ for i2 in "${uniq[@]}";
 do 
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
-  path=$(basename "${path}")
-  f1="${path}/${fname}" 
+  path2=$(basename "${path}")
+  f1="${path2}/${fname}" 
+  f2="${path}/${fname}" 
   if [ -f "$tmpfile" ]
   then
     case $MEDIATYPE in
@@ -112,7 +113,7 @@ do
             echo "$f1" >> "$tmpfile"
             ;;
         tv|television|series)
-            echo "$f1" >> "$tmpfile"
+            echo "$f2" >> "$tmpfile"
             ;;
         '')
             echo "Media type parameter is empty"
