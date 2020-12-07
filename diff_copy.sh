@@ -94,7 +94,7 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
 }
 
 process_diff
-#printf '%s\n' "${db_list[@]}"
+printf '%s\n' "${db_list[@]}"
 IFS=$'\n'
 readarray -t uniq < <(printf '%s\n' "${db_list[@]}" | sort -u)
 unset IFS
