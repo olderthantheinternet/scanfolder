@@ -106,10 +106,10 @@ do
   path=$(basename "${path}")
   
   path2=$(dirname "${i2}")
-  show=$(dirname "$path2")
+  show=$(dirname "${path2}")
   season=$(basename "${path2}")
   f1="${path}/${fname}" 
-  f2="${show}"/${season}/${fname}"
+  f2="${show}/${season}/${fname}"
   
   if [ -f "$tmpfile" ]
   then
