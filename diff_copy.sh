@@ -104,14 +104,14 @@ do
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
   path=$(basename "${path}")
-  f1="${YOURRCLONE}/${path}/${fname}" 
+  f1="${path}/${fname}" 
   f2="${YOURRCLONE}/${path}"          
   f3="${fname}"
   if [ -f "$tmpfile" ]
   then
     case $MEDIATYPE in
         movie)
-            echo "$f3" >> "$tmpfile"
+            echo "$f1" >> "$tmpfile"
             ;;
         tv|television|series)
             echo "$f2" >> "$tmpfile"
