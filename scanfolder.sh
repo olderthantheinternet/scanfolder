@@ -195,9 +195,9 @@ do
         autoscan_check
         if [ "$check" -eq "0" ]; then
            process_autoscan "${g}";
+           c=$[$c +1]
         fi
      fi
-     c=$[$c +1]
   fi
 done
 echo "${c} files processed"

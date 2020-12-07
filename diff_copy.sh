@@ -13,24 +13,7 @@ done
 
 send_to_rclone ()
 {
-  case $MEDIATYPE in
-          movie)
-             DESTP=$(dirname "${1}")
-             PUSH=$(rclone copy "${YOURRCLONE}${1}" "${ZDRCLONE}/${DESTP}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
-             ;;
-          tv|television|series)
-             DESTP=$(basename "${1}")
-             PUSH=$(rclone copy "${YOURRCLONE}${DESTP}" "${ZDRCLONE}/${DESTP}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
-             ;;
-          '')
-                  echo "Media type parameter is empty"
-                  exit;
-                  ;;
-          *)
-                  echo "Media type specified unknown"
-                  exit;
-                  ;;
-        esac
+          PUSH=$(rclone copy --files-from "${1}" "${YOURRCLONE}" "${ZDRCLONE}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
 }
 
 process_diff ()
@@ -61,7 +44,7 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
                   ;;
           tv|television|series)
           cmd="SELECT \
-          DISTINCT substr(p.file,instr(p.file,'/Season'),-instr(p.file,'/Season')) AS TVSHOW \
+          DISTINCT p.file AS TVSHOW \
           FROM metadata_items md \
           inner join media_items m ON m.metadata_item_id=md.id \
           inner join media_parts p on m.id=p.media_item_id \
@@ -96,16 +79,37 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
 }
 
 process_diff
-#printf '%s\n' "${db_list[@]}"
+printf '%s\n' "${db_list[@]}"
 IFS=$'\n'
 readarray -t uniq < <(printf '%s\n' "${db_list[@]}" | sort -u)
 unset IFS
-c=1
-for i2 in "${uniq[@]}"; 
+tmpfile=$(mktemp)
+for i2 in "${uniq[@]}";
 do 
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
-  path=$(basename "${path}")
-  f="${path}/${fname}"
-  send_to_rclone "${f}"
+  path=$(basename "${path}")  
+  f1="${path}/${fname}" 
+  f2="${i2#*/*/*/*/*/}" 
+  if [ -f "$tmpfile" ]
+  then
+    case $MEDIATYPE in
+        movie)
+            echo "$f1" >> "$tmpfile"
+            ;;
+        tv|television|series)
+            echo "$f2" >> "$tmpfile"
+            ;;
+        '')
+            echo "Media type parameter is empty"
+            exit;
+            ;;
+        *)
+            echo "Media type specified unknown"
+            exit;
+            ;;
+    esac          
+  fi
 done
+send_to_rclone "$tmpfile"
+rm "$tmpfile"
