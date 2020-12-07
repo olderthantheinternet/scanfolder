@@ -104,7 +104,12 @@ do
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
   path=$(basename "${path}")
+  
+  path2=$(dirname "${i2}")
+  show=$(dirname "$path2")
+  season=$(basename "${path2}")
   f1="${path}/${fname}" 
+  f2="${show}"/${season}/${fname}"
   
   if [ -f "$tmpfile" ]
   then
@@ -113,7 +118,7 @@ do
             echo "$f1" >> "$tmpfile"
             ;;
         tv|television|series)
-            echo "$f1" >> "$tmpfile"
+            echo "$f2" >> "$tmpfile"
             ;;
         '')
             echo "Media type parameter is empty"
