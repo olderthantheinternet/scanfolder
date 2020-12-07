@@ -59,7 +59,7 @@ WHERE md2.library_section_id = '$SECID' AND p2.file NOT LIKE '%$YOURMEDIA%' \
                   ;;
           tv|television|series)
           cmd="SELECT \
-          DISTINCT substr(p.file,instr(p.file,'/Season'),-instr(p.file,'/Season')) AS TVSHOW \
+          DISTINCT p.file AS TVSHOW \
           FROM metadata_items md \
           inner join media_items m ON m.metadata_item_id=md.id \
           inner join media_parts p on m.id=p.media_item_id \
