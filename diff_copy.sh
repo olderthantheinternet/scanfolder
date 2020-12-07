@@ -106,7 +106,8 @@ do
   path=$(basename "${path}")
   
   path2=$(dirname "${i2}")
-  show=$(dirname "${path2}")
+  show=$(basename "${path2}")
+  show=$(basename "${show}")
   season=$(basename "${path2}")
   f1="${path}/${fname}" 
   f2="${show}/${season}/${fname}"
