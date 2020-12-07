@@ -106,8 +106,8 @@ do
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
   path=$(basename "${path}")
-  f1="${YOURRCLONE}/${path}/${fname}"  # movies
-  f2="${YOURRCLONE}/${path}            # tv
+  f1="${YOURRCLONE}/${path}/${fname}" # movies  
+  f2="${YOURRCLONE}/${path}"          # tv  
   if [ -f "$tmpfile" ]
   then
     case $MEDIATYPE in
