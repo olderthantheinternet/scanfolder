@@ -106,11 +106,25 @@ do
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
   path=$(basename "${path}")
-  f="${path}/${fname}"
+  f1="${YOURRCLONE}/${path}/${fname}"  # movies
+  f2="${YOURRCLONE}/${path}            # tv
   if [ -f "$tmpfile" ]
-  then 
-    echo "$f" >> "$tmpfile"
+  then
+    case $MEDIATYPE in
+        movie)
+            echo "$f1" >> "$tmpfile"
+            ;;
+        tv|television|series)
+            echo "$f2" >> "$tmpfile"
+            ;;
+        '')
+            echo "Media type parameter is empty"
+            exit;
+            ;;
+        *)
+            echo "Media type specified unknown"
+            exit;
+            ;;
+    esac          
   fi
-  #send_to_rclone "${f}"
 done
-printf '%s\n' "${tmpfile}"
