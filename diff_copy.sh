@@ -104,11 +104,10 @@ do
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
   path=$(basename "${path}")
-  
-  path2=$(dirname "${i2}")
-  show=$(basename "${path2}")
-  show=$(basename "${show}")
-  season=$(basename "${path2}")
+
+  tv_folder="${i2%/*}"       
+  season="${tv_folder##*/}"  
+  show="${tv_folder###*/}"
   f1="${path}/${fname}" 
   f2="${show}/${season}/${fname}"
   
