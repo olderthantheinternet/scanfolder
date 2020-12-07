@@ -100,12 +100,17 @@ process_diff
 IFS=$'\n'
 readarray -t uniq < <(printf '%s\n' "${db_list[@]}" | sort -u)
 unset IFS
-c=1
-for i2 in "${uniq[@]}"; 
+tmpfile=$(mktemp)
+for i2 in "${uniq[@]}";
 do 
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
   path=$(basename "${path}")
   f="${path}/${fname}"
-  send_to_rclone "${f}"
+  if [ -f "tmpfile" ]
+  then 
+    echo "$f" >> "tmpfile"
+  fi
+  #send_to_rclone "${f}"
 done
+printf '%s\n' "${tmpfile}"
