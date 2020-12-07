@@ -15,7 +15,7 @@ send_to_rclone ()
 {
   case $MEDIATYPE in
           movie)
-             PUSH=$(rclone copy --files-from "${1}" "${ZDRCLONE}/" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
+             PUSH=$(rclone copy --files-from "${1}" "${YOURMEDIA}" "${ZDRCLONE}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
              ;;
           tv|television|series)             
              PUSH=$(rclone copy --files-from "${1}" "${ZDRCLONE}/" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
@@ -104,13 +104,14 @@ do
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
   path=$(basename "${path}")
-  f1="${YOURRCLONE}/${path}/${fname}" #   
-  f2="${YOURRCLONE}/${path}"          # movies
+  f1="${YOURRCLONE}/${path}/${fname}" 
+  f2="${YOURRCLONE}/${path}"          
+  f3="${fname}"
   if [ -f "$tmpfile" ]
   then
     case $MEDIATYPE in
         movie)
-            echo "$f2" >> "$tmpfile"
+            echo "$f3" >> "$tmpfile"
             ;;
         tv|television|series)
             echo "$f2" >> "$tmpfile"
