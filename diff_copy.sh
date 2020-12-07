@@ -13,22 +13,7 @@ done
 
 send_to_rclone ()
 {
-  case $MEDIATYPE in
-          movie)
-             PUSH=$(rclone copy --files-from "${1}" "${YOURRCLONE}" "${ZDRCLONE}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
-             ;;
-          tv|television|series)             
-             PUSH=$(rclone copy --files-from "${1}" "${YOURRCLONE}" "${ZDRCLONE}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
-             ;;
-          '')
-                  echo "Media type parameter is empty"
-                  exit;
-                  ;;
-          *)
-                  echo "Media type specified unknown"
-                  exit;
-                  ;;
-        esac
+          PUSH=$(rclone copy --files-from "${1}" "${YOURRCLONE}" "${ZDRCLONE}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
 }
 
 process_diff ()
