@@ -20,7 +20,7 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do
         a) ZDTD=${OPTARG};;
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
-        h) TPSLIMIT=${OPTARG};;
+        l) TPSLIMIT=${OPTARG};;
                
      esac
 done
