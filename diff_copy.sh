@@ -18,7 +18,7 @@ send_to_rclone ()
              PUSH=$(rclone copy --files-from "${1}" "${YOURRCLONE}" "${ZDRCLONE}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
              ;;
           tv|television|series)             
-             PUSH=$(rclone copy --files-from "${1}" "${ZDRCLONE}/" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
+             PUSH=$(rclone copy --files-from "${1}" "${YOURRCLONE}" "${ZDRCLONE}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
              ;;
           '')
                   echo "Media type parameter is empty"
@@ -105,8 +105,6 @@ do
   path=$(dirname "${i2}")
   path=$(basename "${path}")
   f1="${path}/${fname}" 
-  f2="${YOURRCLONE}/${path}"          
-  f3="${fname}"
   if [ -f "$tmpfile" ]
   then
     case $MEDIATYPE in
@@ -114,7 +112,7 @@ do
             echo "$f1" >> "$tmpfile"
             ;;
         tv|television|series)
-            echo "$f2" >> "$tmpfile"
+            echo "$f1" >> "$tmpfile"
             ;;
         '')
             echo "Media type parameter is empty"
