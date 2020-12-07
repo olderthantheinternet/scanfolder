@@ -15,12 +15,10 @@ send_to_rclone ()
 {
   case $MEDIATYPE in
           movie)
-             DESTP=$(dirname "${1}")
-             PUSH=$(rclone copy "${YOURRCLONE}${1}" "${ZDRCLONE}/${DESTP}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
+             PUSH=$(rclone copy --files-from "${1}" "${ZDRCLONE}/" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
              ;;
-          tv|television|series)
-             DESTP=$(basename "${1}")
-             PUSH=$(rclone copy "${YOURRCLONE}${DESTP}" "${ZDRCLONE}/${DESTP}" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
+          tv|television|series)             
+             PUSH=$(rclone copy --files-from "${1}" "${ZDRCLONE}/" -vP --stats=10s --drive-use-trash=false --transfers 16 --checkers=16 --tpslimit 4 --tpslimit-burst 32)
              ;;
           '')
                   echo "Media type parameter is empty"
@@ -106,13 +104,13 @@ do
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
   path=$(basename "${path}")
-  f1="${YOURRCLONE}/${path}/${fname}" # movies  
-  f2="${YOURRCLONE}/${path}"          # tv  
+  f1="${YOURRCLONE}/${path}/${fname}" #   
+  f2="${YOURRCLONE}/${path}"          # movies
   if [ -f "$tmpfile" ]
   then
     case $MEDIATYPE in
         movie)
-            echo "$f1" >> "$tmpfile"
+            echo "$f2" >> "$tmpfile"
             ;;
         tv|television|series)
             echo "$f2" >> "$tmpfile"
@@ -128,3 +126,4 @@ do
     esac          
   fi
 done
+send_to_rclone "${tmpfile}"
