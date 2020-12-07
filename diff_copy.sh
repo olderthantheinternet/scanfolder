@@ -126,4 +126,4 @@ do
     esac          
   fi
 done
-send_to_rclone "${tmpfile}"
+send_to_rclone "$tmpfile"
