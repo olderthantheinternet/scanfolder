@@ -103,14 +103,9 @@ for i2 in "${uniq[@]}";
 do 
   fname=$(basename "${i2}")
   path=$(dirname "${i2}")
-  path=$(basename "${path}")
-
-  tv_folder="${i2%/*}"       
-  season="${tv_folder##*/}"  
-  show="${tv_folder#*/}"
+  path=$(basename "${path}")  
   f1="${path}/${fname}" 
-  f2="${show}/${season}/${fname}"
-  
+  f2="${i2#*/*/*/*/*/}" 
   if [ -f "$tmpfile" ]
   then
     case $MEDIATYPE in
