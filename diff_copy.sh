@@ -109,7 +109,7 @@ do
   f="${path}/${fname}"
   if [ -f "tmpfile" ]
   then 
-    echo "$f" >> "tmpfile"
+    echo "$f" >> "$tmpfile"
   fi
   #send_to_rclone "${f}"
 done
