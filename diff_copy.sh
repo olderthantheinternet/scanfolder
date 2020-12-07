@@ -107,7 +107,7 @@ do
   path=$(dirname "${i2}")
   path=$(basename "${path}")
   f="${path}/${fname}"
-  if [ -f "tmpfile" ]
+  if [ -f "$tmpfile" ]
   then 
     echo "$f" >> "$tmpfile"
   fi
