@@ -6,7 +6,7 @@
 #-d = integer for number of days
 #-h = integer for number of hours
 # do not use both -d & -h
-while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do 
+while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -20,6 +20,7 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do
         a) ZDTD=${OPTARG};;
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
+        h) TPSLIMIT=${OPTARG};;
                
      esac
 done
@@ -51,19 +52,19 @@ get_files ()
   fi
   if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --max-age "${DAYS}d" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+    filelist=($(rclone lsf --files-only --absolute --tpslimit "${TPSLIMIT}" --max-age "${DAYS}d" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
     MAXAGE=1
   fi
   if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --max-age "${HOURS}h" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+    filelist=($(rclone lsf --files-only --absolute --tpslimit "${TPSLIMIT}" --max-age "${HOURS}h" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
     MAXAGE=1
   fi
   if [ -z ${MAXAGE+x} ]; then
      IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+    filelist=($(rclone lsf --files-only --absolute --tpslimit "${TPSLIMIT}" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
   fi
   file_list=()
