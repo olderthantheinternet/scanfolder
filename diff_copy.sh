@@ -112,3 +112,4 @@ do
   fi
 done
 send_to_rclone "$tmpfile"
+rm "$tmpfile"
