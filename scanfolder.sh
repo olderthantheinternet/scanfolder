@@ -5,8 +5,9 @@
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
 #-d = integer for number of days
 #-h = integer for number of hours
+#-l = path to autoscan.db /your/path/
 # do not use both -d & -h
-while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do 
+while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -20,6 +21,7 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h: option; do
         a) ZDTD=${OPTARG};;
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
+        l) ASCAN=${OPTARG};;
                
      esac
 done
@@ -154,7 +156,12 @@ autoscan_check ()
 {
          i3="${g//\'/''}"
          sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '%$i3%' LIMIT 1)"
-         scan="/opt/autoscan/autoscan.db"
+         if [ -z "$ASCAN" ] 
+         then
+                scan="${ASCAN}autoscan.db"
+         else
+                scan="/opt/autoscan/autoscan.db"
+         fi
          check=0
          FOO="$(echo -e "${g}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
          FOO=${#FOO}  
