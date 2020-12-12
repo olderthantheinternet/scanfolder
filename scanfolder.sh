@@ -5,6 +5,7 @@
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
 #-d = integer for number of days
 #-h = integer for number of hours
+#-l = path to autoscan.db /your/path/
 # do not use both -d & -h
 while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do 
     case "${option}" in
@@ -20,7 +21,7 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do
         a) ZDTD=${OPTARG};;
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
-        l) TPSLIMIT=${OPTARG};;
+        l) ASCAN=${OPTARG};;
                
      esac
 done
@@ -52,19 +53,19 @@ get_files ()
   fi
   if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --min-age "${DAYS}d" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+    filelist=($(rclone lsf --files-only --absolute --max-age "${DAYS}d" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
     MAXAGE=1
   fi
   if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --min-age "${HOURS}h" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+    filelist=($(rclone lsf --files-only --absolute --max-age "${HOURS}h" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
     MAXAGE=1
   fi
   if [ -z ${MAXAGE+x} ]; then
      IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --tpslimit "${TPSLIMIT}" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
+    filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
   fi
   file_list=()
@@ -155,7 +156,12 @@ autoscan_check ()
 {
          i3="${g//\'/''}"
          sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '%$i3%' LIMIT 1)"
-         scan="/opt/autoscan/autoscan.db"
+         if [ -z "$ASCAN" ] 
+         then
+                scan="${ASCAN}autoscan.db"
+         else
+                scan="/opt/autoscan/autoscan.db"
+         fi
          check=0
          FOO="$(echo -e "${g}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
          FOO=${#FOO}  
