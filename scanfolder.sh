@@ -158,9 +158,9 @@ autoscan_check ()
          sql="SELECT EXISTS(SELECT 1 FROM scan WHERE folder like '%$i3%' LIMIT 1)"
          if [ -z "$ASCAN" ] 
          then
-                scan="${ASCAN}autoscan.db"
-         else
                 scan="/opt/autoscan/autoscan.db"
+         else
+                scan="${ASCAN}autoscan.db"
          fi
          check=0
          FOO="$(echo -e "${g}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
