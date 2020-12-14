@@ -4,7 +4,7 @@ plexdocker="plex"
 
 check ()
 {
-   $needed=32768;
+   needed=32768;
    cmd="pragma page_size"
    IFS=$'\n'
    fqry=(`sqlite3 "$plex" "$cmd"`)
