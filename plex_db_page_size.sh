@@ -5,8 +5,10 @@ plexdocker="plex"
 needed=32768;
 cmd="pragma page_size"
 N=(`sqlite3 "$plexdb" "$cmd"`)
-#unset IFS
-if [ "$N" -eq "$needed" ]; then echo "page_size is already set to ${N}" exit; fi
+if [ "$N" -eq "$needed" ]; then 
+  echo "page_size is already set to ${N}" 
+  #exit; 
+fi
 
 #docker stop "${plexdocker}"
 plexdb=$(dirname "$plexdb")
