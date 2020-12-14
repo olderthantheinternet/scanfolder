@@ -1,8 +1,27 @@
 #!/bin/bash
-plexdb="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
+plexdb="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 plexdocker="plex"
 
+check ()
+{
+   $needed=32768;
+   cmd="pragma page_size"
+   IFS=$'\n'
+   fqry=(`sqlite3 "$plex" "$cmd"`)
+   unset IFS
+   if [ "$fqry" -eq "$needed" ]
+      echo "page_size is already set to ${fqry}"
+      exit;
+   fi
+}
+
+check
+
+echo "page size needs changing"
+exit;
+
 docker stop "${plexdocker}"
+
 cd "${plexdb}"
 cp com.plexapp.plugins.library.db com.plexapp.plugins.library.db.original
 sqlite3 com.plexapp.plugins.library.db "DROP index 'index_title_sort_naturalsort'"
