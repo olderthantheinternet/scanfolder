@@ -2,25 +2,23 @@
 plexdb="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 plexdocker="plex"
 
-check ()
-{
-   needed=32768;
-   cmd="pragma page_size"
-   IFS=$'\n'
-   fqry=(`sqlite3 "$plex" "$cmd"`)
-   unset IFS
-   if [ "$fqry" -eq "$needed" ]; then
-      echo "page_size is already set to ${fqry}"
-      exit;
-   fi
-}
+needed=32768;
+cmd="pragma page_size"
+#IFS=$'\n'
+fqry=(`sqlite3 "$plex" "$cmd"`)
+#unset IFS
+if [ "$fqry" -eq "$needed" ]; then
+   echo "page_size is already set to ${fqry}"
+   exit;
+fi
 
-check
 
-echo "page size needs changing"
+#docker stop "${plexdocker}"
+plexdb=$(dirname "$plexdb")
+echo "$plexdb"
+
+echo "page size needs changing as it's currently set to ${fqry}"
 exit;
-
-docker stop "${plexdocker}"
 
 cd "${plexdb}"
 cp com.plexapp.plugins.library.db com.plexapp.plugins.library.db.original
