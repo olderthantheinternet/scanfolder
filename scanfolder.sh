@@ -125,6 +125,8 @@ done
 IFS=$'\n'
 readarray -t uniq < <(printf '%s\n' "${farray[@]}" | sort -u)
 unset IFS
+printf '%s\n' "${uniq[@]}"
+exit;
 c=1
 for i2 in "${uniq[@]}"; 
 do 
