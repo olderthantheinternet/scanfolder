@@ -1,5 +1,5 @@
 #!/bin/bash
-# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 
+# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u PAS_URL:PORT/XXXX -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 
 #-w = second to wait between sends to autoscan
 #-r = RCLONE mount, like zendrive or zd_storage
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
@@ -7,13 +7,12 @@
 #-h = integer for number of hours
 #-l = path to autoscan.db /your/path/
 # do not use both -d & -h
-while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do 
+while getopts s:c:t:u:o:z:w:r:a:d:h: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
         t) TRIGGER=${OPTARG};;
         u) URL=${OPTARG};;
-        p) USERPASS=${OPTARG};;
         o) DOCKERNAME=${OPTARG};;
         z) PLEXDB=${OPTARG};;
         w) WAIT=${OPTARG};;
@@ -21,7 +20,6 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do
         a) ZDTD=${OPTARG};;
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
-        l) ASCAN=${OPTARG};;
                
      esac
 done
@@ -97,6 +95,11 @@ get_db_items ()
          for f in "${fqry[@]}"; do
            db_list+=("${f}")
          done
+}
+
+process_PAS ()
+{
+   curl -d "eventType=Manual&filepath=${1}" ${$URL} > /dev/null
 }
 
 process_autoscan () {
@@ -199,9 +202,7 @@ do
   g=${i2//[$'\t\r\n']}
   if [ ! -z "$g" ]; then
      if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
-        autoscan_check
-        if [ "$check" -eq "0" ]; then
-           process_autoscan "${g}";
+           process_PAS "${g}";
            c=$[$c +1]
         fi
      fi
