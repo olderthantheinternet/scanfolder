@@ -9,7 +9,7 @@ check ()
    IFS=$'\n'
    fqry=(`sqlite3 "$plex" "$cmd"`)
    unset IFS
-   if [ "$fqry" -eq "$needed" ]
+   if [ "$fqry" -eq "$needed" ]; then
       echo "page_size is already set to ${fqry}"
       exit;
    fi
