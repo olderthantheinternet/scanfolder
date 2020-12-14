@@ -7,6 +7,11 @@
 #-h = integer for number of hours
 #-l = path to autoscan.db /your/path/
 # do not use both -d & -h
+#
+# NOTE this version uses MIN-AGE, so the hours or days you 
+# select will be used to set the minimum age a file has to
+# be to be included
+#
 while getopts s:c:t:u:o:z:w:r:a:d:h: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
