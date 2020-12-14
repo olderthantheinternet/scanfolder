@@ -2,14 +2,17 @@
 plexdb="/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
 plexdocker="plex"
 
-
-
 check_if_needed () {
-N=$(sqlite3 $plexdb/com.plexapp.plugins.library.db "pragma page_size;")
-[ "$N" -ne 32768 ] then update_plex else exit 0
+N=$(`sqlite3 "$plexdb/com.plexapp.plugins.library.db" "pragma page_size"`)
+if [ "$N" -ne 32768 ]; then echo "plex needs updating" else exit 0; fi
  
 }
+
+exit;
 update_plex () {
+
+
+
 docker stop "${plexdocker}"
 cd "${plexdb}"
 cp com.plexapp.plugins.library.db com.plexapp.plugins.library.db.original
