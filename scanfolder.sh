@@ -203,8 +203,7 @@ do
   if [ ! -z "$g" ]; then
      if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
            process_PAS "${g}";
-           c=$[$c +1]
-        fi
+           c=$[$c +1]        
      fi
   fi
 done
