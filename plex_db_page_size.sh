@@ -10,7 +10,7 @@ fi
 
 #docker stop "${plexdocker}"
 plexdb=$(dirname "$plexdb")
-cd "$plexdb/"
+cd "$plexdb/";
 exit;
 cp com.plexapp.plugins.library.db com.plexapp.plugins.library.db.original
 sqlite3 com.plexapp.plugins.library.db "DROP index 'index_title_sort_naturalsort'"
