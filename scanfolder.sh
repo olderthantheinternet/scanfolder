@@ -99,7 +99,7 @@ get_db_items ()
 
 process_PAS ()
 {
-   curl -d "eventType=Manual&filepath=${1}" ${$URL} > /dev/null
+   curl -d "eventType=Manual&filepath=${1}" $URL > /dev/null
 }
 
 process_autoscan () {
