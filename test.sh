@@ -8,11 +8,7 @@ if [ "$N" -ne 32768 ]; then echo "plex needs updating" else exit 0; fi
  
 }
 
-exit;
 update_plex () {
-
-
-
 docker stop "${plexdocker}"
 cd "${plexdb}"
 cp com.plexapp.plugins.library.db com.plexapp.plugins.library.db.original
