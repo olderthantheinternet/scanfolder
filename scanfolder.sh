@@ -127,7 +127,7 @@ IFS=$'\n'
 readarray -t uniq < <(printf '%s\n' "${farray[@]}" | sort -u)
 unset IFS
 c=1
-extensions=('srt' 'part' 'jpg' 'png' 'nfo')
+extensions=(srt part jpg png nfo)
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
