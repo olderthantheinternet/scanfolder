@@ -24,8 +24,7 @@ while getopts s:c:t:u:o:z:w:r:a:d:h: option; do
         r) RCLONEMOUNT=${OPTARG};;
         a) ZDTD=${OPTARG};;
         d) DAYS=${OPTARG};;
-        h) HOURS=${OPTARG};;
-               
+        h) HOURS=${OPTARG};;               
      esac
 done
 
