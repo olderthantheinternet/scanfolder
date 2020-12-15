@@ -104,7 +104,7 @@ get_db_items ()
 process_PAS ()
 {
    FOO="${1@Q}"
-   curl -d "eventType=Manual&filepath=$FOO" $URL > /dev/null
+   #curl -d "eventType=Manual&filepath=$FOO" $URL > /dev/null
    echo "$FOO added to your plex_autoscan queue!"
 }
 
@@ -131,7 +131,7 @@ do
   g=${i2//[$'\t\r\n']}
   if [ ! -z "$g" ]; then
      ext="${g##*.}"
-     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ ! -z "$ext" ] && [[ ! "${extensions[@]}" =~ "${ext}" ]]; then        
+     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ ! -z "${ext}" ] && [[ ! "${extensions[@]}" =~ "${ext}" ]]; then        
          process_PAS "${g}"
          c=$[$c +1]         
      fi
