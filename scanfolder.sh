@@ -134,7 +134,7 @@ do
   if [ ! -z "$g" ]; then
      ext="${g##*.}"
      if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ "${ext}" != "srt" ]; then        
-         process_PAS "${g}";
+         process_PAS "${g}"
          c=$[$c +1]         
      fi
   fi
