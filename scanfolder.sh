@@ -130,11 +130,12 @@ for i2 in "${uniq[@]}";
 do 
   g=${i2//[$'\t\r\n']}
   if [ ! -z "$g" ]; then
-     ext="${g##*.}"
-     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ ! -z "${ext}" ] && [[ ! "${extensions[@]}" =~ "${ext}" ]]; then        
-         process_PAS "${g}"
-         c=$[$c +1]         
-     fi
+     type=(file --mime-type -b "${g}")
+     echo "${type}"
+     #if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ ! -z "${ext}" ] && [[ ! "${extensions[@]}" =~ "${ext}" ]]; then        
+     #    process_PAS "${g}"
+     #    c=$[$c +1]         
+     #fi
   fi
 done
 echo "${c} files processed" 
