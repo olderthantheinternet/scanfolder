@@ -104,8 +104,9 @@ get_db_items ()
 
 process_PAS ()
 {
-   curl -d "eventType=Manual&filepath=${1}" $URL > /dev/null
-   echo "$1 added to your plex_autoscan queue!"
+   FOO="$(echo -e "${1}" | sed -e 's/[][`~!@#$%^&*()-_=+{}\|;:",<.>/?'"'"']/\\&/g')"
+   ##curl -d "eventType=Manual&filepath=${FOO}" $URL > /dev/null
+   echo "$FOO added to your plex_autoscan queue!"
 }
 
 get_files
