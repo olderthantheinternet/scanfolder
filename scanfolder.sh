@@ -104,10 +104,11 @@ get_db_items ()
 
 process_PAS ()
 {
-   FOO="$(echo "${1}" | sed 's/[][`~!@#$%^&*()-_=+{}\|;:",<.>/?'"'"']/\\&/g')"
+   #FOO="$(echo "${1}" | sed 's/[][`~!@#$%^&*()-_=+{}\|;:",<.>/?'"'"']/\\&/g')"
    #echo "'"'[]`~!@#$%^&*()-_=+{}\|;:",<.>/?' | sed 's/[][`~!@#$%^&*()-_=+{}\|;:",<.>/?'"'"']/\\&/g'
    ##curl -d "eventType=Manual&filepath=${FOO}" $URL > /dev/null
-   echo "$FOO added to your plex_autoscan queue!"
+   foo_esc="${1@Q}"
+   echo "$foo_esc added to your plex_autoscan queue!"
 }
 
 get_files
