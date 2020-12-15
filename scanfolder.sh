@@ -127,12 +127,13 @@ IFS=$'\n'
 readarray -t uniq < <(printf '%s\n' "${farray[@]}" | sort -u)
 unset IFS
 c=1
+extensions=('srt' 'part' 'jpg' 'png' 'nfo')
 for i2 in "${uniq[@]}"; 
 do 
   g=${i2//[$'\t\r\n']}
   if [ ! -z "$g" ]; then
      ext="${g##*.}"
-     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ "${ext}" != "srt" ]; then        
+     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ ! " ${extensions[@]} " =~ " ${ext} " ]; then        
          process_PAS "${g}"
          c=$[$c +1]         
      fi
