@@ -133,7 +133,7 @@ do
   g=${i2//[$'\t\r\n']}
   if [ ! -z "$g" ]; then
      ext="${g##*.}"
-     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ ! " ${extensions[@]} " =~ " ${ext} " ]; then        
+     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ] && [ ! "${extensions[@]}" =~ "${ext}" ]; then        
          process_PAS "${g}"
          c=$[$c +1]         
      fi
