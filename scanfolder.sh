@@ -6,7 +6,7 @@
 #-d = integer for number of days
 #-h = integer for number of hours
 #-l = path to autoscan.db /your/path/
-# do not use both -d & -h
+# do not use both -d & -h - please just one
 while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
