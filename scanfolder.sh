@@ -40,6 +40,8 @@ get_files ()
   then 
      rclone_refresh "$RCPORT" "$SOURCE_FOLDER"      
   fi
+  exitstatus=$?
+  echo "$exitstatus"
   
   case $TRIGGER in
           movie)
