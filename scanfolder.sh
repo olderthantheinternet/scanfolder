@@ -35,12 +35,10 @@ get_files ()
 {
   if [ "$MTYPE" -eq "1" ] 
   then 
-     rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER" 
-     SCANMOUNT="$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"
+     rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER"      
   elif [ "$MTYPE" -eq "2" ] 
   then 
-     rclone_refresh "$RCPORT" "$SOURCE_FOLDER" 
-     SCANMOUNT="$SOURCE_FOLDER"
+     rclone_refresh "$RCPORT" "$SOURCE_FOLDER"      
   fi
   
   case $TRIGGER in
@@ -68,19 +66,19 @@ get_files ()
   fi
   if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --max-age "${DAYS}d" --max-depth "$depth" --format pt --separator "|" "$SCANMOUNT"))
+    filelist=($(rclone lsf --files-only --absolute --max-age "${DAYS}d" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
     MAXAGE=1
   fi
   if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --max-age "${HOURS}h" --max-depth "$depth" --format pt --separator "|" "$SCANMOUNT"))
+    filelist=($(rclone lsf --files-only --absolute --max-age "${HOURS}h" --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
     MAXAGE=1
   fi
   if [ -z ${MAXAGE+x} ]; then
      IFS=$'\n' 
-    filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format pt --separator "|" "$SCANMOUNT"))
+    filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
   fi
   file_list=()
