@@ -7,6 +7,8 @@
 #-h = integer for number of hours
 #-l = path to autoscan.db /your/path/
 # do not use both -d & -h - please just one
+#-j thr rclone rc port number you use
+#-k  enter 1 for mergerfs enter 2 for rclone union
 while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
