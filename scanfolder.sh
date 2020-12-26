@@ -35,10 +35,10 @@ get_files ()
 {
   if [ "$MTYPE" -eq "1" ] 
   then 
-     rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER" 
+     rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER"      
   elif [ "$MTYPE" -eq "2" ] 
   then 
-     rclone_refresh "$RCPORT" "$SOURCE_FOLDER" 
+     rclone_refresh "$RCPORT" "$SOURCE_FOLDER"      
   fi
   
   case $TRIGGER in
@@ -167,8 +167,8 @@ process_autoscan () {
 
 rclone_refresh ()
 {
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=false dir="$2" 
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=true dir="$2"
+/usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=false dir="$2" 
+/usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=true dir="$2"
 }
 
 
