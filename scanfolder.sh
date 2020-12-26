@@ -133,7 +133,9 @@ process_autoscan () {
                   exit;
                   ;;
         esac
-        rclone_refresh "$RCPORT" "$RCLONEMOUNT" "$URL"
+        if [ "$MTYPE" -eq "1" ] then rclone_refresh "$RCPORT" "$RCLONEMOUNT/$URL" fi
+        if [ "$MTYPE" -eq "2" ] then rclone_refresh "$RCPORT" "$URL" fi
+          
         if [ -z "$USERPASS" ] 
         then
                 curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
@@ -157,8 +159,8 @@ process_autoscan () {
 
 rclone_fresh ()
 {
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=false dir="$2/$3" 
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=true dir="$2/$3"
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=false dir="$2" 
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=true dir="$2"
 }
 
 
