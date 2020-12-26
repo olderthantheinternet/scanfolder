@@ -40,7 +40,7 @@ get_files ()
   elif [ "$MTYPE" -eq "2" ] 
   then 
      rclone_refresh "$RCPORT" "$SOURCE_FOLDER" 
-     $SCANMOUNT="$ZDTD/$SOURCE_FOLDER"
+     $SCANMOUNT="$SOURCE_FOLDER"
   fi
   
   case $TRIGGER in
