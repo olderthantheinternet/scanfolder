@@ -136,7 +136,6 @@ process_autoscan () {
         if [ "$MTYPE" -eq "1" ] 
         then 
             rclone_refresh "$RCPORT" "$RCLONEMOUNT/$URL" 
-        fi
         elif [ "$MTYPE" -eq "2" ] 
         then 
             rclone_refresh "$RCPORT" "$URL" 
