@@ -169,10 +169,18 @@ rclone_refresh ()
 {
 /usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=false dir="$2" 
 exitstatus1=$?
-echo "$exitstatus1"
+if [ $exitstatus1 -eq 0 ]; then
+   :
+else
+   exit
+fi
 /usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=true dir="$2"
 exitstatus2=$?
-echo "$exitstatus2"
+if [ $exitstatus2 -eq 0 ]; then
+   :
+else
+   exit
+fi
 }
 
 
