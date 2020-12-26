@@ -167,9 +167,8 @@ process_autoscan () {
 
 rclone_refresh ()
 {
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=false dir="$2" 
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=true dir="$2"
-wait
+/usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=false dir="$2" 
+/usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=true dir="$2"
 }
 
 
