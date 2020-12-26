@@ -133,8 +133,14 @@ process_autoscan () {
                   exit;
                   ;;
         esac
-        if [ "$MTYPE" -eq "1" ] then rclone_refresh "$RCPORT" "$RCLONEMOUNT/$URL" fi
-        if [ "$MTYPE" -eq "2" ] then rclone_refresh "$RCPORT" "$URL" fi
+        if [ "$MTYPE" -eq "1" ] 
+        then 
+            rclone_refresh "$RCPORT" "$RCLONEMOUNT/$URL" 
+        fi
+        elif [ "$MTYPE" -eq "2" ] 
+        then 
+            rclone_refresh "$RCPORT" "$URL" 
+        fi
           
         if [ -z "$USERPASS" ] 
         then
