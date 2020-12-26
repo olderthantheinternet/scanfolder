@@ -7,7 +7,9 @@
 #-h = integer for number of hours
 #-l = path to autoscan.db /your/path/
 # do not use both -d & -h - please just one
-while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do 
+#-j thr rclone rc port number you use
+#-k  enter 1 for mergerfs enter 2 for rclone union
+while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -22,12 +24,23 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
         l) ASCAN=${OPTARG};;
+        j) RCPORT=${OPTARG};;
+        k) MTYPE=${OPTARG};;
+        
                
      esac
 done
 
 get_files ()
 {
+  if [ "$MTYPE" -eq "1" ] 
+  then 
+     rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER" 
+  elif [ "$MTYPE" -eq "2" ] 
+  then 
+     rclone_refresh "$RCPORT" "$SOURCE_FOLDER" 
+  fi
+  
   case $TRIGGER in
           movie)
                   depth=2
@@ -130,7 +143,7 @@ process_autoscan () {
                   exit;
                   ;;
         esac
-        
+                  
         if [ -z "$USERPASS" ] 
         then
                 curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
@@ -151,6 +164,13 @@ process_autoscan () {
           fi
         fi
 }
+
+rclone_refresh ()
+{
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=false dir="$2" 
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=true dir="$2"
+}
+
 
 autoscan_check ()
 {
