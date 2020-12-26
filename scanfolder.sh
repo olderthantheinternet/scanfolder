@@ -31,6 +31,14 @@ done
 
 get_files ()
 {
+  if [ "$MTYPE" -eq "1" ] 
+  then 
+     rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER" 
+  elif [ "$MTYPE" -eq "2" ] 
+  then 
+     rclone_refresh "$RCPORT" "$SOURCE_FOLDER" 
+  fi
+  
   case $TRIGGER in
           movie)
                   depth=2
@@ -133,14 +141,7 @@ process_autoscan () {
                   exit;
                   ;;
         esac
-        if [ "$MTYPE" -eq "1" ] 
-        then 
-            rclone_refresh "$RCPORT" "$RCLONEMOUNT/$URL" 
-        elif [ "$MTYPE" -eq "2" ] 
-        then 
-            rclone_refresh "$RCPORT" "$URL" 
-        fi
-          
+                  
         if [ -z "$USERPASS" ] 
         then
                 curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
@@ -162,7 +163,7 @@ process_autoscan () {
         fi
 }
 
-rclone_fresh ()
+rclone_refresh ()
 {
 /usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=false dir="$2" 
 /usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=true dir="$2"
