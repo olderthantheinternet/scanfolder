@@ -7,7 +7,7 @@
 #-h = integer for number of hours
 #-l = path to autoscan.db /your/path/
 # do not use both -d & -h - please just one
-while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do 
+while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -22,6 +22,9 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h:l: option; do
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
         l) ASCAN=${OPTARG};;
+        j) RCPORT=${OPTARG};;
+        k) MTYPE=${OPTARG};;
+        
                
      esac
 done
@@ -130,7 +133,7 @@ process_autoscan () {
                   exit;
                   ;;
         esac
-        
+        rclone $RCPORT $RCLONEMOUNT $URL
         if [ -z "$USERPASS" ] 
         then
                 curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
@@ -151,6 +154,13 @@ process_autoscan () {
           fi
         fi
 }
+
+rclone ()
+{
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:$1 recursive=false dir="$2/$3" 
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:$1 recursive=true dir="$2/$3"
+}
+
 
 autoscan_check ()
 {
