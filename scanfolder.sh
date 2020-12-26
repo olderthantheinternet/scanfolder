@@ -40,9 +40,7 @@ get_files ()
   then 
      rclone_refresh "$RCPORT" "$SOURCE_FOLDER"      
   fi
-  exitstatus=$?
-  echo "$exitstatus"
-  
+    
   case $TRIGGER in
           movie)
                   depth=2
@@ -170,7 +168,11 @@ process_autoscan () {
 rclone_refresh ()
 {
 /usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=false dir="$2" 
+exitstatus1=$?
+echo "$exitstatus1"
 /usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=true dir="$2"
+exitstatus2=$?
+echo "$exitstatus2"
 }
 
 
