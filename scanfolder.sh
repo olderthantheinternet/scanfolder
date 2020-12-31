@@ -168,6 +168,7 @@ process_autoscan () {
 rclone_refresh ()
 {
 /usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" --rc-no-auth recursive=false dir="$2" 
+wait
 exitstatus1=$?
 if [ $exitstatus1 -eq 0 ]; then
    :
@@ -175,6 +176,7 @@ else
    exit
 fi
 /usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" --rc-no-auth recursive=true dir="$2"
+wait
 exitstatus2=$?
 if [ $exitstatus2 -eq 0 ]; then
    :
