@@ -33,13 +33,13 @@ done
 
 get_files ()
 {
-  if [ "$MTYPE" -eq "1" ] 
-  then 
-     rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER"      
-  elif [ "$MTYPE" -eq "2" ] 
-  then 
-     rclone_refresh "$RCPORT" "$SOURCE_FOLDER"      
-  fi
+  #if [ "$MTYPE" -eq "1" ] 
+  #then 
+  #   rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER"  
+  #elif [ "$MTYPE" -eq "2" ] 
+  #then 
+  #   rclone_refresh "$RCPORT" "$SOURCE_FOLDER"     
+  #fi
     
   case $TRIGGER in
           movie)
@@ -113,49 +113,15 @@ get_db_items ()
 }
 
 process_autoscan () {
-        case $TRIGGER in
-          movie)
-                  arrType="radarr"
-                  #folderPath="$(dirname "${1}")"
-                  folderPath="$1"
-                  relativePath=$(basename "$folderPath")
-                  jsonData='{"eventType": "Download", "movie": {"folderPath": "'"$folderPath"/'"}, "movieFile": {"relativePath": "'"$relativePath"/'"}}'
-                  ;;
-          tv|television|series)
-                  arrType="sonarr"
-                  folderPath="$1"
-                  relativePath=$(basename "$folderPath")
-                  jsonData='{"eventType": "Download","episodeFile": {"relativePath": "'"$relativePath"'"},"series": {"path": "'"$folderPath"/'"}}'
-                  ;;
-          music)
-                  arrType="lidarr"
-                  folderPath=$(dirname "$1")
-                  trackPath="$1"
-                  relativePath=$(basename "$folderPath")
-                  jsonData='{"eventType": "Download", "isUpgrade": false, "trackFiles": [{ "path": "'"$trackPath"'" }],"artist": {"name": "'"$relativePath"'","path": "'"$folderPath"'"}}'
-                  ;;
-          '')
-                  echo "Media type parameter is empty"
-                  exit;
-                  ;;
-          *)
-                  echo "Media type specified unknown"
-                  exit;
-                  ;;
-        esac
-                  
-        if [ -z "$USERPASS" ] 
-        then
-                curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
-        else
-                curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType -u $USERPASS > /dev/null
-        fi
-        
-        if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
-                echo "$1 added to your autoscan queue!"
+                          
+        unset up
+        if [ -z "$USERPASS" ]; then up=""; else up="-u $USERPASS"; fi
+        curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" $up > /dev/null    
         if [[ $? -ne 0 ]]; then
                 echo $1 >> /tmp/failedscans.txt
+                echo "Unable to reach autoscan ERROR: $?"
         else
+          echo "$1 added to your autoscan queue!"
           if [ -z "$WAIT" ]
           then
               sleep 10
@@ -167,14 +133,14 @@ process_autoscan () {
 
 rclone_refresh ()
 {
-/usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=false dir="$2" 
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" --rc-no-auth recursive=false dir="$2" 
 exitstatus1=$?
 if [ $exitstatus1 -eq 0 ]; then
    :
 else
    exit
 fi
-/usr/bin/rclone rc vfs/refresh -vvv --timeout=60m --rc-addr=localhost:"$1" recursive=true dir="$2"
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" --rc-no-auth recursive=true dir="$2"
 exitstatus2=$?
 if [ $exitstatus2 -eq 0 ]; then
    :
