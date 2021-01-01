@@ -114,13 +114,7 @@ get_db_items ()
 
 process_autoscan () {
                           
-        if [ -z "$USERPASS" ] 
-        then
-           curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" > /dev/null   
-        #else
-           #curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" -u $USERPASS > /dev/null  
-           # not sure how this is done yet
-        fi
+        curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" > /dev/null    
                 
         if [[ $? -ne 0 ]]; then
                 echo $1 >> /tmp/failedscans.txt
