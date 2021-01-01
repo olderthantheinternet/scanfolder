@@ -113,49 +113,20 @@ get_db_items ()
 }
 
 process_autoscan () {
-        case $TRIGGER in
-          movie)
-                  arrType="radarr"
-                  #folderPath="$(dirname "${1}")"
-                  folderPath="$1"
-                  relativePath=$(basename "$folderPath")
-                  jsonData='{"eventType": "Download", "movie": {"folderPath": "'"$folderPath"/'"}, "movieFile": {"relativePath": "'"$relativePath"/'"}}'
-                  ;;
-          tv|television|series)
-                  arrType="sonarr"
-                  folderPath="$1"
-                  relativePath=$(basename "$folderPath")
-                  jsonData='{"eventType": "Download","episodeFile": {"relativePath": "'"$relativePath"'"},"series": {"path": "'"$folderPath"/'"}}'
-                  ;;
-          music)
-                  arrType="lidarr"
-                  folderPath=$(dirname "$1")
-                  trackPath="$1"
-                  relativePath=$(basename "$folderPath")
-                  jsonData='{"eventType": "Download", "isUpgrade": false, "trackFiles": [{ "path": "'"$trackPath"'" }],"artist": {"name": "'"$relativePath"'","path": "'"$folderPath"'"}}'
-                  ;;
-          '')
-                  echo "Media type parameter is empty"
-                  exit;
-                  ;;
-          *)
-                  echo "Media type specified unknown"
-                  exit;
-                  ;;
-        esac
-                  
+                          
         if [ -z "$USERPASS" ] 
         then
-                curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType > /dev/null
+           curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" > /dev/null   
         else
-                curl -d "$jsonData" -H "Content-Type: application/json" $URL/triggers/$arrType -u $USERPASS > /dev/null
+           #curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" -u $USERPASS > /dev/null  
+           # not sure how this is done yet
         fi
-        
-        if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
-                echo "$1 added to your autoscan queue!"
+                
         if [[ $? -ne 0 ]]; then
                 echo $1 >> /tmp/failedscans.txt
+                echo "Unable to reach autoscan ERROR: $?"
         else
+          echo "$1 added to your autoscan queue!"
           if [ -z "$WAIT" ]
           then
               sleep 10
