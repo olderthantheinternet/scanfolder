@@ -114,8 +114,9 @@ get_db_items ()
 
 process_autoscan () {
                           
-        curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" > /dev/null    
-                
+        unset up
+        if [ -z "$USERPASS" ]; then up=""; else up="-u $USERPASS"; fi
+        curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" $up > /dev/null    
         if [[ $? -ne 0 ]]; then
                 echo $1 >> /tmp/failedscans.txt
                 echo "Unable to reach autoscan ERROR: $?"
