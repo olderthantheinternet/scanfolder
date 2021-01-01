@@ -117,7 +117,7 @@ process_autoscan () {
         if [ -z "$USERPASS" ] 
         then
            curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" > /dev/null   
-        else
+        #else
            #curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" -u $USERPASS > /dev/null  
            # not sure how this is done yet
         fi
