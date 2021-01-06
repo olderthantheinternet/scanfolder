@@ -1,5 +1,5 @@
 #!/bin/bash
-# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 
+# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 -j 5577 
 #-w = second to wait between sends to autoscan
 #-r = RCLONE mount, like zendrive or zd_storage
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
@@ -8,7 +8,7 @@
 #-l = path to autoscan.db /your/path/
 # do not use both -d & -h - please just one
 #-j thr rclone rc port number you use
-#-k  enter 1 for mergerfs enter 2 for rclone union
+
 while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
@@ -24,23 +24,15 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k: option; do
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
         l) ASCAN=${OPTARG};;
-        j) RCPORT=${OPTARG};;
-        k) MTYPE=${OPTARG};;
-        
+        j) RCPORT=${OPTARG};;               
                
      esac
 done
 
 get_files ()
 {
-  #if [ "$MTYPE" -eq "1" ] 
-  #then 
-  #   rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER"  
-  #elif [ "$MTYPE" -eq "2" ] 
-  #then 
-  #   rclone_refresh "$RCPORT" "$SOURCE_FOLDER"     
-  #fi
-    
+  rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER"  
+     
   case $TRIGGER in
           movie)
                   depth=2
@@ -133,14 +125,14 @@ process_autoscan () {
 
 rclone_refresh ()
 {
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" --rc-no-auth recursive=false dir="$2" 
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=false dir="$2" 
 exitstatus1=$?
 if [ $exitstatus1 -eq 0 ]; then
    :
 else
    exit
 fi
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" --rc-no-auth recursive=true dir="$2"
+/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" recursive=true dir="$2"
 exitstatus2=$?
 if [ $exitstatus2 -eq 0 ]; then
    :
