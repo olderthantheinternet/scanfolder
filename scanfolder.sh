@@ -131,7 +131,7 @@ VARa=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true 
 exitcode1=$?
 JIDa=${VARa:(-4)}
 VARa2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDa} | grep "success")
-valuea=${VAR2a#*:}
+valuea=${VARa2#*:}
 while [ "$valuea" != " true" ]; do
   VARa2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDa} | grep "success")
   valuea=${VARa2#*:} 
