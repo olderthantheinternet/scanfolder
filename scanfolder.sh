@@ -125,22 +125,27 @@ process_autoscan () {
 
 rclone_refresh ()
 {
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" --timeout=6h recursive=false dir="$2" 
-exitstatus1=$?
-if [ $exitstatus1 -eq 0 ]; then
-   :
-else
-   exit
-fi
-/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" --timeout=6h recursive=true dir="$2"
-exitstatus2=$?
-if [ $exitstatus2 -eq 0 ]; then
-   :
-else
-   exit
-fi
-}
+VAR=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true recursive=false dir="$2" | grep "jobid")
+JID=${VAR:(-4)}
+VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
+value=${VAR2#*:}
+while [ "$value" != " true" ]; do
+  VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
+  value=${VAR2#*:} 
+  sleep 1
+done
 
+VAR=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
+JID=${VAR:(-4)}
+VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
+value=${VAR2#*:}
+while [ "$value" != " true" ]; do
+  VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
+  value=${VAR2#*:} 
+  sleep 1
+done
+
+}
 
 autoscan_check ()
 {
