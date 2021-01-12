@@ -132,7 +132,7 @@ JIDa=${VARa:(-4)}
 VARa2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDa} | grep "success")
 valuea=${VAR2a#*:}
 while [ "$valuea" != " true" ]; do
-  VAR2a=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDa} | grep "success")
+  VARa2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDa} | grep "success")
   valuea=${VARa2#*:} 
   sleep 1
 done
