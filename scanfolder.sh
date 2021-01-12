@@ -126,27 +126,27 @@ process_autoscan () {
 rclone_refresh ()
 {
 #set recurse = false for selected folder
-VAR=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true recursive=false dir="$2" | grep "jobid")
+VARa=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true recursive=false dir="$2" | grep "jobid")
 exitcode1=$?
-JID=${VAR:(-4)}
-VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
-value=${VAR2#*:}
-while [ "$value" != " true" ]; do
-  VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
-  value=${VAR2#*:} 
+JIDa=${VARa:(-4)}
+VARa2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDa} | grep "success")
+valuea=${VAR2a#*:}
+while [ "$valuea" != " true" ]; do
+  VAR2a=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDa} | grep "success")
+  valuea=${VARa2#*:} 
   sleep 1
 done
 
 # if recursive false retuns OK, then continue with recursive true
 if [ $exitcode1 -eq 0 ]; then
-   VAR=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
+   VARb=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
    exitcode2=$?
-   JID=${VAR:(-4)}
-   VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
-   value=${VAR2#*:}
-   while [ "$value" != " true" ]; do
-     VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
-     value=${VAR2#*:} 
+   JIDb=${VARb:(-4)}
+   VARb2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDb} | grep "success")
+   valueb=${VARb2#*:}
+   while [ "$valueb" != " true" ]; do
+     VARb2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JIDb} | grep "success")
+     valueb=${VARb2#*:} 
      sleep 1
    done
    if [ $exitcode2 -eq 0 ]; then
