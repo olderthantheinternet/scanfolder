@@ -139,7 +139,8 @@ done
 
 # if recursive false retuns OK, then continue with recursive true
 CHECK=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "$2")
-CHECK=${CHECK:(-2)} 
+CHECK=${CHECK:(-4)}
+CHECK=${CHECK//\"/}
 if [ "$CHECK" = "OK" ]; then
    echo "vfs/refresh recursive=false of ${2} completed"
    echo "begining vfs/refresh recursive=true of ${2}"
@@ -153,7 +154,8 @@ if [ "$CHECK" = "OK" ]; then
      sleep 1
    done
    CHECK=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "$2")
-   CHECK=${CHECK:(-2)}
+   CHECK=${CHECK:(-4)}
+   CHECK=${CHECK//\"/}
    if [ "$CHECK" = "OK" ]; then
     echo "vfs/refresh recursive=true of ${2} completed"
    else
