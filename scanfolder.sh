@@ -126,6 +126,7 @@ process_autoscan () {
 rclone_refresh ()
 {
 #set recurse = false for selected folder
+echo "begining vfs/refresh recursive=false of ${2}"
 VARa=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true recursive=false dir="$2" | grep "jobid")
 exitcode1=$?
 JIDa=${VARa:(-4)}
@@ -139,6 +140,8 @@ done
 
 # if recursive false retuns OK, then continue with recursive true
 if [ $exitcode1 -eq 0 ]; then
+   echo "vfs/refresh recursive=false of ${2}" completed"
+   echo "begining vfs/refresh recursive=true of ${2}"
    VARb=$(/usr/bin/rclone rc vfs/refresh -vvv --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
    exitcode2=$?
    JIDb=${VARb:(-4)}
@@ -150,11 +153,13 @@ if [ $exitcode1 -eq 0 ]; then
      sleep 1
    done
    if [ $exitcode2 -eq 0 ]; then
-    :
+    echo "vfs/refresh recursive=true of ${2}" completed"
    else
+    echo "vfs/refresh recursive=true of ${2}" failed, exiting script"
     exit
    fi
 else
+   echo "vfs/refresh recursive=false of ${2}" failed, exiting script"
    exit
 fi
 
