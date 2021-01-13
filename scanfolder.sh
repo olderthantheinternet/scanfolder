@@ -44,17 +44,17 @@ get_files ()
                   depth=3
                   ;;
           '')
-                  echo "Media type parameter is empty"
+                  echo "Media type parameter is empty, please check configuration options"
                   exit;
                   ;;
           *)
-                  echo "Media type specified unknown"
+                  echo "Media type specified is unknown"
                   exit;
                   ;;
   esac
   unset MAXAGE
   if [ ! -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then 
-     echo "Please no not use DAYS & HOURS together, you filthy animal";
+     echo "Please no not use the DAYS & HOURS options together, you filthy animal";
   fi
   if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
     IFS=$'\n' 
@@ -143,7 +143,7 @@ CHECK=${CHECK:(-4)}
 CHECK=${CHECK//\"/}
 if [ "$CHECK" = "OK" ]; then
    echo "vfs/refresh recursive=false of ${2} completed"
-   echo "begining vfs/refresh recursive=true of ${2}"
+   echo "beginning vfs/refresh recursive=true of ${2}"
    VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
    JID=${VAR:(-4)}
    VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
