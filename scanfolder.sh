@@ -128,10 +128,12 @@ rclone_refresh ()
 #set recurse = false for selected folder
 echo "begining vfs/refresh recursive=false of ${2}"
 VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" --timeout=6h _async=true recursive=false dir="$2" | grep "jobid")
-JID=${VAR:(-4)}
+JID=${VAR#*:}
+JID=$(echo -e "${JID}" | tr -d '[:space:]')
 VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
 value=${VAR2#*:}
-while [ "$value" != " true" ]; do
+value=$(echo -e "${value}" | tr -d '[:space:]')
+while [ "$value" != "true" ]; do
   VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
   value=${VAR2#*:} 
   sleep 1
