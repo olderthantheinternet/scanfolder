@@ -108,7 +108,7 @@ process_autoscan () {
                           
         unset up
         if [ -z "$USERPASS" ]; then up=""; else up="-u $USERPASS"; fi
-        curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${1}" $up > /dev/null    
+        curl -G --request POST --url "${URL}/triggers/manual" --data-urlencode "dir=${1}" $up > /dev/null    
         if [[ $? -ne 0 ]]; then
                 echo $1 >> /tmp/failedscans.txt
                 echo "Unable to reach autoscan ERROR: $?"
@@ -127,7 +127,7 @@ rclone_refresh ()
 {
 #set recurse = false for selected folder
 echo "begining vfs/refresh recursive=false of ${2}"
-VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" --timeout=6h _async=true recursive=false dir="$2" | grep "jobid")
+VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" _async=true recursive=false dir="$2" | grep "jobid")
 JID=${VAR#*:}
 JID=$(echo -e "${JID}" | tr -d '[:space:]')
 VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
@@ -147,7 +147,7 @@ CHECK=${CHECK//\"/}
 if [ "$CHECK" = "OK" ]; then
    echo "vfs/refresh recursive=false of ${2} completed"
    echo "beginning vfs/refresh recursive=true of ${2}"
-   VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" --timeout=6h _async=true recursive=true dir="$2" | grep "jobid")
+   VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
    JID=${VAR#*:}
    JID=$(echo -e "${JID}" | tr -d '[:space:]')
    VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
