@@ -77,7 +77,7 @@ get_files ()
   for i in "${filelist[@]}"
   do
      if [[ "$i" == *"$check_string"* ]]; then
-        echo "${i}" >> 503list.log
+        echo "${i}"        
      fi
   done
 }
