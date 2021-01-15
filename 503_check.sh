@@ -132,41 +132,4 @@ else
 fi
 }
 
-
-
 get_files
-[[ ${#file_list[@]} -eq 0 ]] && { echo "No new media to process"; exit; }
-get_db_items
-IFS=$'\n'
-mapfile -t missing_files < <( comm -13 --nocheck-order <(printf '%s\n' "${db_list[@]}" | LC_ALL=C sort) <(printf '%s\n' "${file_list[@]}" | LC_ALL=C sort) )
-unset IFS
-declare -a farray
-for i in "${missing_files[@]}"; 
-do
-  f=("$(cut -d '|' -f1 <<< "$i")");
-  f=${f//[$'\t\r\n']}
-  if [ $TRIGGER == "music" ]; then
-    echo "skip"
-    farray+=("${f}")
-  else
-    farray+=("$(dirname "${f}")")
-  fi
-done
-IFS=$'\n'
-readarray -t uniq < <(printf '%s\n' "${farray[@]}" | sort -u)
-unset IFS
-c=1
-for i2 in "${uniq[@]}"; 
-do 
-  g=${i2//[$'\t\r\n']}
-  if [ ! -z "$g" ]; then
-     if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
-        autoscan_check
-        if [ "$check" -eq "0" ]; then
-           process_autoscan "${g}";
-           c=$[$c +1]
-        fi
-     fi
-  fi
-done
-echo "${c} files processed"
