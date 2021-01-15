@@ -1,5 +1,5 @@
 #!/bin/bash
-# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 -j 5577 
+# /path/scanfolder/503_check.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 -j 5577 
 #-w = second to wait between sends to autoscan
 #-r = RCLONE mount, like zendrive or zd_storage
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
@@ -76,8 +76,9 @@ get_files ()
   check_string="code: 503"
   for i in "${filelist[@]}"
   do
-     var=$(egrep "$check_string" $i)
-     echo "$var"
+     if [[ "$i" == *"$check_string"* ]]; then
+        echo "${i}" >> 503list.log
+     fi
   done
 }
 
