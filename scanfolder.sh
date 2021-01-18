@@ -33,7 +33,7 @@ done
 
 get_files ()
 {
-  rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER" $USEVFS 
+  rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER"
      
   case $TRIGGER in
           movie)
