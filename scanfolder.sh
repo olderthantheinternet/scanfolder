@@ -1,5 +1,5 @@
 #!/bin/bash
-# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 -j 5577 
+# /path/scanfolder/scanfolder.sh -s tv/10s -c /mnt/unionfs/ -t tv -u http://autoscan.TDL:3030 -p usernamepassword -o plex -z '/path to plex db/' -w 10 -r zendrive -a zd-tv2 -j 5577 -v 1 
 #-w = second to wait between sends to autoscan
 #-r = RCLONE mount, like zendrive or zd_storage
 #-a = the folder name at the base of the mount: zd-movies,zd-tv1,zd-tv2,zd-tv3
@@ -8,6 +8,7 @@
 #-l = path to autoscan.db /your/path/
 # do not use both -d & -h - please just one
 #-j thr rclone rc port number you use
+# -v set to 1 if you use VFS Cache in your rclone mount
 
 while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k: option; do 
     case "${option}" in
@@ -24,14 +25,15 @@ while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k: option; do
         d) DAYS=${OPTARG};;
         h) HOURS=${OPTARG};;
         l) ASCAN=${OPTARG};;
-        j) RCPORT=${OPTARG};;               
+        j) RCPORT=${OPTARG};; 
+        v) USEVFS=${OPTARG};; 
                
      esac
 done
 
 get_files ()
 {
-  rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER"  
+  rclone_refresh "$RCPORT" "$ZDTD/$SOURCE_FOLDER" $USEVFS 
      
   case $TRIGGER in
           movie)
@@ -140,34 +142,39 @@ while [ "$value" != "true" ]; do
   sleep 1
 done
 
+
 # if recursive false retuns OK, then continue with recursive true
 CHECK=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "$2")
 CHECK=${CHECK:(-4)}
 CHECK=${CHECK//\"/}
 if [ "$CHECK" = "OK" ]; then
    echo "vfs/refresh recursive=false of ${2} completed"
-   echo "beginning vfs/refresh recursive=true of ${2}"
-   VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
-   JID=${VAR#*:}
-   JID=$(echo -e "${JID}" | tr -d '[:space:]')
-   VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
-   value=${VAR2#*:}
-   value=$(echo -e "${value}" | tr -d '[:space:]')
-   while [ "$value" != "true" ]; do
-     VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
-     value=${VAR2#*:} 
-     value=$(echo -e "${value}" | tr -d '[:space:]')
-     sleep 1
-   done
-   CHECK=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "$2")
-   CHECK=${CHECK:(-4)}
-   CHECK=${CHECK//\"/}
-   if [ "$CHECK" = "OK" ]; then
-    echo "vfs/refresh recursive=true of ${2} completed"
+   if [ ! -z "${USEVFS}" ]; then
+    :
    else
-     echo "vfs/refresh recursive=true of ${2} failed, exiting script"
-     exit
-   fi
+       echo "beginning vfs/refresh recursive=true of ${2}"
+       VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
+       JID=${VAR#*:}
+       JID=$(echo -e "${JID}" | tr -d '[:space:]')
+       VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
+       value=${VAR2#*:}
+       value=$(echo -e "${value}" | tr -d '[:space:]')
+       while [ "$value" != "true" ]; do
+         VAR2=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "success")
+         value=${VAR2#*:} 
+         value=$(echo -e "${value}" | tr -d '[:space:]')
+         sleep 1
+       done
+       CHECK=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "$2")
+       CHECK=${CHECK:(-4)}
+       CHECK=${CHECK//\"/}
+       if [ "$CHECK" = "OK" ]; then
+        echo "vfs/refresh recursive=true of ${2} completed"
+       else
+         echo "vfs/refresh recursive=true of ${2} failed, exiting script"
+         exit
+       fi
+    fi
 else
    echo "vfs/refresh recursive=false of ${2} failed, exiting script"
    exit
