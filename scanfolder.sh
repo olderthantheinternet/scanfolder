@@ -149,8 +149,8 @@ CHECK=${CHECK:(-4)}
 CHECK=${CHECK//\"/}
 if [ "$CHECK" = "OK" ]; then
    echo "vfs/refresh recursive=false of ${2} completed"
-   if [ ! -z "${USEVFS}" ]; then
-    :
+   if [ "$USEVFS" != "1" ]; then
+    echo "No VFS Cache so NO recursive=true"
    else
        echo "beginning vfs/refresh recursive=true of ${2}"
        VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" _async=true recursive=true dir="$2" | grep "jobid")
