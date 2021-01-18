@@ -10,7 +10,7 @@
 #-j thr rclone rc port number you use
 # -v set to 1 if you use VFS Cache in your rclone mount
 
-while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k: option; do 
+while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k:v option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
