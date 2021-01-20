@@ -55,12 +55,12 @@ fi
 
 USEVFS="1"
 #TV 
-rclone_refresh "5577" "zd-tv2/tv/20s" 
-rclone_refresh "5577" "zd-tv2/tv/10s"
-rclone_refresh "5577" "zd-tv1/tv/00s"
-rclone_refresh "5577" "zd-tv1/tv/90s"
-rclone_refresh "5577" "zd-tv1/tv/80s"
-rclone_refresh "5577" "zd-tv1/tv/70s"
+rclone_refresh "5577" "zd-tv2/tv/20s" &
+rclone_refresh "5577" "zd-tv2/tv/10s" &
+rclone_refresh "5577" "zd-tv1/tv/00s" &
+rclone_refresh "5577" "zd-tv1/tv/90s" &
+rclone_refresh "5577" "zd-tv1/tv/80s" &
+rclone_refresh "5577" "zd-tv1/tv/70s" &
 
 #4K TV
-#rclone_refresh "5577" "zd-tv3/tv/4k" 
+#rclone_refresh "5577" "zd-tv3/tv/4k" &
