@@ -8,8 +8,15 @@ function usage {
   echo "Examples:"
   echo "    bash vfs_refresh.sh \"5590\" \"TV\" "
   echo "    bash vfs_refresh.sh \"5590\" \"TV4K\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"TVANIME\" "
   echo "    bash vfs_refresh.sh \"5590\" \"MOVIES\" "
   echo "    bash vfs_refresh.sh \"5590\" \"MOVIES4K\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"MOVIESANIME\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"AUDIOBOOKS\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"MASTERCLASSES\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"COURSES\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"SPORTS\" "
+  echo ""
   exit 1
 }
 if [ -z "$1" ] && [ -z "$2" ]; then
@@ -98,8 +105,41 @@ if [ "$2" = "TV4K" ]; then
     rclone_refresh "${1}" "zd-tv3/tv/4k" &
 fi
 
+if [ "$2" = "TVANIME" ]; then
+    #TV Anime
+    rclone_refresh "${1}" "zd-anime/tv/anime" &
+    rclone_refresh "${1}" "zd-anime/tv/anime-dub" & 
+fi
+
+if [ "$2" = "AUDIOBOOKS" ]; then
+    #Audiobooks
+    rclone_refresh "${1}" "zd-audiobooks/audiobooks/Audiobooks_English" &
+fi
+
+if [ "$2" = "MASTERCLASSES" ]; then
+    #Master Classes
+    rclone_refresh "${1}" "zd-courses/courses/masterclass" &
+fi
+
+if [ "$2" = "COURSES" ]; then
+    #Courses
+    rclone_refresh "${1}" "zd-courses/courses/plex_courses" &
+fi
+
+if [ "$2" = "EXERCISE" ]; then
+    #Exercise
+    rclone_refresh "${1}" "zd-courses/courses/exercise" &
+fi
+
+if [ "$2" = "SPORTS" ]; then
+    #Sports
+    rclone_refresh "${1}" "zd-sport/sports/sportsdb" &
+fi
+
+USEVFS=""
+
 if [ "$2" = "MOVIES" ]; then
-    USEVFS=""
+    
     #Movies
     rclone_refresh "${1}" "zd-movies/movies/20s" &
     rclone_refresh "${1}" "zd-movies/movies/10s" &
@@ -115,5 +155,10 @@ if [ "$2" = "MOVIES4K" ]; then
     rclone_refresh "${1}" "zd-movies/movies/4k-dv" &
 fi
 
+if [ "$2" = "MOVIESANIME" ]; then
+    #Movies Anime
+    rclone_refresh "${1}" "zd-anime/movies/anime" &    
+fi
+
 wait
-echo "all vfs/refresh commands have finished"
+echo "all mount vfs/refreshes for ${2} have finished"
