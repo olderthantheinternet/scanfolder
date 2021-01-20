@@ -11,14 +11,29 @@ function usage {
   echo "    vfs_refresh.sh \"5590\" \"TVANIME\" "
   echo "    vfs_refresh.sh \"5590\" \"MOVIES\" "
   echo "    vfs_refresh.sh \"5590\" \"MOVIES4K\" "
+  echo "    vfs_refresh.sh \"5590\" \"MOVIES3D\" "
   echo "    vfs_refresh.sh \"5590\" \"MOVIESANIME\" "
   echo "    vfs_refresh.sh \"5590\" \"AUDIOBOOKS\" "
   echo "    vfs_refresh.sh \"5590\" \"MASTERCLASSES\" "
   echo "    vfs_refresh.sh \"5590\" \"COURSES\" "
   echo "    vfs_refresh.sh \"5590\" \"SPORTS\" "
   echo ""
+  echo "    ---NON-ENGLISH CONTENT---"
+  echo "    vfs_refresh.sh \"5590\" \"TVDANISH\" "
+  echo "    vfs_refresh.sh \"5590\" \"TVDUTCH\" "
+  echo "    vfs_refresh.sh \"5590\" \"TVGERMAN\" "  
+  echo "    vfs_refresh.sh \"5590\" \"TVNORWEGIAN\" "
+  echo "    vfs_refresh.sh \"5590\" \"TVASIAN\" "
+  echo "    vfs_refresh.sh \"5590\" \"AUDIODANISH\" "
+  echo "    vfs_refresh.sh \"5590\" \"AUDIODUTCH\" "
+  echo "    vfs_refresh.sh \"5590\" \"MOVIESDANISH\" "
+  echo "    vfs_refresh.sh \"5590\" \"MOVIESDUTCH\" "
+  echo "    vfs_refresh.sh \"5590\" \"MOVIESGERMAN\" "  
+  echo "    vfs_refresh.sh \"5590\" \"MOVIESSWEDISH\" "
+  echo "    vfs_refresh.sh \"5590\" \"MOVIESNORDIC4K\" "  
   exit 1
 }
+
 if [ -z "$1" ] && [ -z "$2" ]; then
   echo "please provide a port number and Media type"
   usage
@@ -89,7 +104,7 @@ fi
 }
 
 USEVFS="1"
-RCPORT="$1"
+
 if [ "$2" = "TV" ]; then
     #TV 
     rclone_refresh "${1}" "zd-tv2/tv/20s" &
@@ -136,6 +151,34 @@ if [ "$2" = "SPORTS" ]; then
     rclone_refresh "${1}" "zd-sports/sports/sportsdb" &
 fi
 
+## NON-English TV##
+if [ "$2" = "TVDANISH" ]; then
+    rclone_refresh "${1}" "zd-tv-non-english/tv_non-english/Danish" &
+fi
+if [ "$2" = "TVDUTCH" ]; then
+    rclone_refresh "${1}" "zd-tv-non-english/tv_non-english/Dutch" &
+fi
+if [ "$2" = "TVGERMAN" ]; then
+    rclone_refresh "${1}" "zd-tv-non-english/tv_non-english/German" &
+fi
+if [ "$2" = "TVNORWEGIAN" ]; then
+    rclone_refresh "${1}" "zd-tv-non-english/tv_non-english/Norwegian" &
+fi
+if [ "$2" = "TVSWEDISH" ]; then
+    rclone_refresh "${1}" "zd-tv-non-english/tv_non-english/Swedish" &
+fi
+if [ "$2" = "TVASIAN" ]; then
+    rclone_refresh "${1}" "zd-tv-non-english/tv_non-english/asian" &
+fi
+
+## NON-English AUDIOBOOKS##
+if [ "$2" = "AUDIODANISH" ]; then
+    rclone_refresh "${1}" "zd-audiobooks-non-english/audiobooks/Audiobooks_Danish" &
+fi
+if [ "$2" = "AUDIOGERMAN" ]; then
+    rclone_refresh "${1}" "zd-audiobooks-non-english/audiobooks/Audiobooks_German" &
+fi
+
 USEVFS=""
 
 if [ "$2" = "MOVIES" ]; then
@@ -149,10 +192,32 @@ if [ "$2" = "MOVIES" ]; then
     rclone_refresh "${1}" "zd-movies/movies/70s" &
 fi
 
+## NON-English Movies##
+if [ "$2" = "MOVIESDANISH" ]; then
+    rclone_refresh "${1}" "zd-movies-non-english/movies-non-english/Danish" &
+fi
+if [ "$2" = "MOVIESDUTCH" ]; then
+    rclone_refresh "${1}" "zd-movies-non-english/movies-non-english/Dutch" &
+fi
+if [ "$2" = "MOVIESGERMAN" ]; then
+    rclone_refresh "${1}" "zd-movies-non-english/movies-non-english/German" &
+fi
+if [ "$2" = "MOVIESSWEDISH" ]; then
+    rclone_refresh "${1}" "zd-movies-non-english/movies-non-english/Swedish" &
+fi
+if [ "$2" = "MOVIESNORDIC4K" ]; then
+    rclone_refresh "${1}" "zd-movies-non-english/movies-non-english/Movies-4k-Nordic" &
+fi
+
 if [ "$2" = "MOVIES4K" ]; then
     #Movies 4K
     rclone_refresh "${1}" "zd-movies/movies/4k" &
     rclone_refresh "${1}" "zd-movies/movies/4k-dv" &
+fi
+
+if [ "$2" = "MOVIES3D" ]; then
+    #Movies 3d
+    rclone_refresh "${1}" "zd-movies/movies/3d" &
 fi
 
 if [ "$2" = "MOVIESANIME" ]; then
