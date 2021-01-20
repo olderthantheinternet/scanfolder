@@ -133,7 +133,7 @@ fi
 
 if [ "$2" = "SPORTS" ]; then
     #Sports
-    rclone_refresh "${1}" "zd-sport/sports/sportsdb" &
+    rclone_refresh "${1}" "zd-sports/sports/sportsdb" &
 fi
 
 USEVFS=""
