@@ -115,7 +115,7 @@ process_autoscan () {
                 echo $1 >> /tmp/failedscans.txt
                 echo "Unable to reach autoscan ERROR: $?"
         else
-          echo "$1 added to your autoscan queue!"
+          echo "$(date +"%F %T,%3N"): $1 added to your autoscan queue!" 
           if [ -z "$WAIT" ]
           then
               sleep 10
