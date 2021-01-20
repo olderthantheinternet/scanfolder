@@ -1,4 +1,32 @@
 #!/bin/bash
+#
+#
+function usage {
+  echo ""
+  echo "Usage: bash vfs_refresh.sh \"PORT\" \"AREA TO REFRESH\" "
+  echo ""
+  echo "Examples:"
+  echo "    bash vfs_refresh.sh \"5590\" \"TV\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"TV4K\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"MOVIES\" "
+  echo "    bash vfs_refresh.sh \"5590\" \"MOVIES4K\" "
+  exit 1
+}
+if [ -z "$1" ] && [ -z "$2" ]
+  echo "please provide a port number and Media type"
+  usage
+fi
+
+if [ -z "$1" ]
+  echo "please provide a port number"
+  usage
+fi
+
+if [ -z "$2" ]
+  echo "please provide an area to refresh"
+  usage
+fi
+
 rclone_refresh ()
 {
 #set recurse = false for selected folder
@@ -55,27 +83,36 @@ fi
 
 USEVFS="1"
 RCPORT="$1"
-#TV 
-rclone_refresh "${1}" "zd-tv2/tv/20s" &
-rclone_refresh "${1}" "zd-tv2/tv/10s" &
-rclone_refresh "${1}" "zd-tv1/tv/00s" &
-rclone_refresh "${1}" "zd-tv1/tv/90s" &
-rclone_refresh "${1}" "zd-tv1/tv/80s" &
-rclone_refresh "${1}" "zd-tv1/tv/70s" &
-#4K TV
-#rclone_refresh "${1}" "zd-tv3/tv/4k" &
+if [ "$2" = "TV" ]; then
+    #TV 
+    rclone_refresh "${1}" "zd-tv2/tv/20s" &
+    rclone_refresh "${1}" "zd-tv2/tv/10s" &
+    rclone_refresh "${1}" "zd-tv1/tv/00s" &
+    rclone_refresh "${1}" "zd-tv1/tv/90s" &
+    rclone_refresh "${1}" "zd-tv1/tv/80s" &
+    rclone_refresh "${1}" "zd-tv1/tv/70s" &
+fi
 
-#USEVFS=""
-#Movies
-#rclone_refresh "${1}" "zd-movies/movies/20s" &
-#rclone_refresh "${1}" "zd-movies/movies/10s" &
-#rclone_refresh "${1}" "zd-movies/movies/00s" &
-#rclone_refresh "${1}" "zd-movies/movies/90s" &
-#rclone_refresh "${1}" "zd-movies/movies/80s" &
-#rclone_refresh "${1}" "zd-movies/movies/70s" &
+if [ "$2" = "TV4K" ]; then
+    #4K TV
+    rclone_refresh "${1}" "zd-tv3/tv/4k" &
+fi
 
-#Movies 4K
-#rclone_refresh "${1}" "zd-movies/movies/4k" &
-#rclone_refresh "${1}" "zd-movies/movies/4k-dv" &
+if [ "$2" = "MOVIES" ]; then
+    USEVFS=""
+    #Movies
+    rclone_refresh "${1}" "zd-movies/movies/20s" &
+    rclone_refresh "${1}" "zd-movies/movies/10s" &
+    rclone_refresh "${1}" "zd-movies/movies/00s" &
+    rclone_refresh "${1}" "zd-movies/movies/90s" &
+    rclone_refresh "${1}" "zd-movies/movies/80s" &
+    rclone_refresh "${1}" "zd-movies/movies/70s" &
+fi
+
+if [ "$2" = "MOVIES4K" ]; then
+    #Movies 4K
+    rclone_refresh "${1}" "zd-movies/movies/4k" &
+    rclone_refresh "${1}" "zd-movies/movies/4k-dv" &
+fi
 
 wait
