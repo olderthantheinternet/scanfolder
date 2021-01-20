@@ -161,4 +161,6 @@ if [ "$2" = "MOVIESANIME" ]; then
 fi
 
 wait
+echo ""
+echo ""
 echo "all mount vfs/refreshes for ${2} have finished"
