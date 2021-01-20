@@ -2,7 +2,7 @@
 rclone_refresh ()
 {
 #set recurse = false for selected folder
-echo "begining vfs/refresh recursive=false of ${2}"
+echo "beginning vfs/refresh recursive=false of ${2}"
 VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" _async=true recursive=false dir="$2" | grep "jobid")
 JID=${VAR#*:}
 JID=$(echo -e "${JID}" | tr -d '[:space:]')
