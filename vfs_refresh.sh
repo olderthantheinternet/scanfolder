@@ -12,17 +12,17 @@ function usage {
   echo "    bash vfs_refresh.sh \"5590\" \"MOVIES4K\" "
   exit 1
 }
-if [ -z "$1" ] && [ -z "$2" ]
+if [ -z "$1" ] && [ -z "$2" ]; then
   echo "please provide a port number and Media type"
   usage
 fi
 
-if [ -z "$1" ]
+if [ -z "$1" ]; then
   echo "please provide a port number"
   usage
 fi
 
-if [ -z "$2" ]
+if [ -z "$2" ]; then
   echo "please provide an area to refresh"
   usage
 fi
