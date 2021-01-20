@@ -76,6 +76,6 @@ rclone_refresh "${1}" "zd-tv1/tv/70s" &
 
 #Movies 4K
 #rclone_refresh "${1}" "zd-movies/movies/4k" &
-#rclone_refresh "${1}" "zd-movies/movies/4kdv" &
+#rclone_refresh "${1}" "zd-movies/movies/4k-dv" &
 
 wait
