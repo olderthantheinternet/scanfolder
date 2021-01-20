@@ -54,13 +54,28 @@ fi
 }
 
 USEVFS="1"
+RCPORT="$1"
 #TV 
-rclone_refresh "5577" "zd-tv2/tv/20s" &
-rclone_refresh "5577" "zd-tv2/tv/10s" &
-rclone_refresh "5577" "zd-tv1/tv/00s" &
-rclone_refresh "5577" "zd-tv1/tv/90s" &
-rclone_refresh "5577" "zd-tv1/tv/80s" &
-rclone_refresh "5577" "zd-tv1/tv/70s" &
-
+rclone_refresh "${1}" "zd-tv2/tv/20s" &
+rclone_refresh "${1}" "zd-tv2/tv/10s" &
+rclone_refresh "${1}" "zd-tv1/tv/00s" &
+rclone_refresh "${1}" "zd-tv1/tv/90s" &
+rclone_refresh "${1}" "zd-tv1/tv/80s" &
+rclone_refresh "${1}" "zd-tv1/tv/70s" &
 #4K TV
-#rclone_refresh "5577" "zd-tv3/tv/4k" &
+#rclone_refresh "${1}" "zd-tv3/tv/4k" &
+
+#USEVFS=""
+#Movies
+#rclone_refresh "${1}" "zd-movies/movies/20s" &
+#rclone_refresh "${1}" "zd-movies/movies/10s" &
+#rclone_refresh "${1}" "zd-movies/movies/00s" &
+#rclone_refresh "${1}" "zd-movies/movies/90s" &
+#rclone_refresh "${1}" "zd-movies/movies/80s" &
+#rclone_refresh "${1}" "zd-movies/movies/70s" &
+
+#Movies 4K
+#rclone_refresh "${1}" "zd-movies/movies/4k" &
+#rclone_refresh "${1}" "zd-movies/movies/4kdv" &
+
+wait
