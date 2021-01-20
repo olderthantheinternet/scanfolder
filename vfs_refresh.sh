@@ -116,3 +116,4 @@ if [ "$2" = "MOVIES4K" ]; then
 fi
 
 wait
+echo "all vfs/refresh commands have finished"
