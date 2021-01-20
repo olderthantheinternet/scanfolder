@@ -1,14 +1,4 @@
-
-USEVFS="1"
-rclone_refresh "5577" "zd-tv2/tv/20s" 
-rclone_refresh "5577" "zd-tv2/tv/10s"
-rclone_refresh "5577" "zd-tv1/tv/00s"
-rclone_refresh "5577" "zd-tv1/tv/90s"
-rclone_refresh "5577" "zd-tv1/tv/80s"
-rclone_refresh "5577" "zd-tv1/tv/70s"
-
-
-
+#!/bin/bash
 rclone_refresh ()
 {
 #set recurse = false for selected folder
@@ -25,8 +15,6 @@ while [ "$value" != "true" ]; do
   value=$(echo -e "${value}" | tr -d '[:space:]')
   sleep 1
 done
-
-
 # if recursive false retuns OK, then continue with recursive true
 CHECK=$(/usr/bin/rclone rc --rc-addr=:"$1" job/status jobid=${JID} | grep "$2")
 CHECK=${CHECK:(-4)}
@@ -64,3 +52,15 @@ else
    exit
 fi
 }
+
+USEVFS="1"
+#TV 
+rclone_refresh "5577" "zd-tv2/tv/20s" 
+rclone_refresh "5577" "zd-tv2/tv/10s"
+rclone_refresh "5577" "zd-tv1/tv/00s"
+rclone_refresh "5577" "zd-tv1/tv/90s"
+rclone_refresh "5577" "zd-tv1/tv/80s"
+rclone_refresh "5577" "zd-tv1/tv/70s"
+
+#4K TV
+#rclone_refresh "5577" "zd-tv3/tv/4k" 
