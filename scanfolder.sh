@@ -10,7 +10,7 @@
 #-j thr rclone rc port number you use
 # -v set to 1 if you use VFS Cache in your rclone mount
 
-while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:k:v option; do 
+while getopts s:c:t:u:p:o:z:w:r:a:d:h:l:j:v: option; do 
     case "${option}" in
         s) SOURCE_FOLDER=${OPTARG};;
         c) CONTAINER_FOLDER=${OPTARG};;
@@ -135,7 +135,7 @@ process_autoscan () {
 rclone_refresh ()
 {
 #set recurse = false for selected folder
-echo "begining vfs/refresh recursive=false of ${2}"
+echo "beginning vfs/refresh recursive=false of ${2}"
 VAR=$(/usr/bin/rclone rc vfs/refresh --rc-addr=localhost:"$1" _async=true recursive=false dir="$2" | grep "jobid")
 JID=${VAR#*:}
 JID=$(echo -e "${JID}" | tr -d '[:space:]')
