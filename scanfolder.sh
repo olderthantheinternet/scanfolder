@@ -81,11 +81,16 @@ get_files ()
      FOO=$(basename "${i}")     
      FOO="$(echo -e "${FOO}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
      FOO=${#FOO}  
+     d1=${FOO##*|}
+     echo "${d1}"
+     d1=$(date -d "${d1}" +%s)
+     echo "${d1}"
      F2=1
      if [ "$FOO" -gt "$F2" ]; then        
         file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
      fi
   done
+  exit
 }
 
 get_db_items ()
