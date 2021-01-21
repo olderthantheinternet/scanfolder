@@ -75,15 +75,19 @@ get_files ()
     filelist=($(rclone lsf --files-only --absolute --max-depth "$depth" --format pt --separator "|" "$RCLONEMOUNT:$ZDTD/$SOURCE_FOLDER"))
     unset IFS
   fi
-  file_list=()
   for i in "${filelist[@]}"
   do
      FOO=$(basename "${i}")     
      FOO="$(echo -e "${FOO}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
      FOO=${#FOO}  
+     d1=${i##*|}
+     d1=$(date -d "${d1}" +%s)
+     i2=${i%|*} 
      F2=1
-     if [ "$FOO" -gt "$F2" ]; then        
-        file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i}")
+     if [ "$FOO" -gt "$F2" ]; then
+        if [[ ! "${i2}" =~ ".nfo" ]]; then
+           file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i2}|${d2}")
+        fi
      fi
   done
 }
@@ -102,7 +106,10 @@ get_db_items ()
          fqry=(`sqlite3 "$plex" "$cmd"`)
          unset IFS
          for f in "${fqry[@]}"; do
-           db_list+=("${f}")
+           d1=${f##*|}
+           d1=$(date -d "${d1}" +%s)
+           f2=${f%|*} 
+           db_list+=("${f2}|${d2}")
          done
 }
 
