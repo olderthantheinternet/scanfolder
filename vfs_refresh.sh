@@ -110,7 +110,7 @@ else
 fi
 }
 
-if [ "${3}" = "Y"];then USEVFS="1"; else USEVFS=""; fi
+if [ "${3}" = "Y" ]; then USEVFS="1"; else USEVFS=""; fi
 
 if [ "$2" = "TV" ]; then
     #TV 
