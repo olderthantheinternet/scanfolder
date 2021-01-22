@@ -85,7 +85,7 @@ get_files ()
      i2=${i%|*} 
      F2=1
      if [ "$FOO" -gt "$F2" ]; then
-        if [[ ! "${i2}" =~ ".nfo" ]] || [[ ! "${i2}" =~ ".srt" ]] || [[ ! "${i2}" =~ ".txt" ]] || [[ ! "${i2}" =~ ".jpg" ]] || [[ ! "${i2}" =~ ".iso" ]]; then
+        if [[ ! "${i2}" =~ ".nfo" ]] && [[ ! "${i2}" =~ ".srt" ]] && [[ ! "${i2}" =~ ".txt" ]] && [[ ! "${i2}" =~ ".jpg" ]] && [[ ! "${i2}" =~ ".iso" ]]; then
            file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i2}|${d2}")
         fi
      fi
