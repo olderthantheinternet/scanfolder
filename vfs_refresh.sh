@@ -34,7 +34,7 @@ function usage {
   exit 1
 }
 
-if [ -z "$1" ] && [ -z "$2" ] && && [ -z "$3" ]; then
+if [ -z "$1" ] && [ -z "$2" ] && [ -z "$3" ]; then
   echo "please provide a port number and Media type and if you want VFS/REFRESH Done"
   usage
 fi
