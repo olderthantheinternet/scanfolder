@@ -110,7 +110,7 @@ else
 fi
 }
 
-if [ "${3}" == "Y"];then USEVFS="1"; else USEVFS=""; fi
+if [ "${3}" = "Y"];then USEVFS="1"; else USEVFS=""; fi
 
 if [ "$2" = "TV" ]; then
     #TV 
@@ -186,8 +186,8 @@ if [ "$2" = "AUDIOGERMAN" ]; then
     rclone_refresh "${1}" "zd-audiobooks-non-english/audiobooks/Audiobooks_German" &
 fi
 
+
 if [ "$2" = "MOVIES" ]; then
-    
     #Movies
     rclone_refresh "${1}" "zd-movies/movies/20s" &
     rclone_refresh "${1}" "zd-movies/movies/10s" &
