@@ -3,7 +3,7 @@
 #
 function usage {
   echo ""
-  echo "Usage: vfs_refresh.sh \"PORT\" \"AREA TO REFRESH\" "
+  echo "Usage: vfs_refresh.sh \"PORT\" \"AREA TO REFRESH\" \"Y or N\" for VFSRefresh "
   echo ""
   echo "Choose from the list below:"
   echo "    vfs_refresh.sh \"5590\" \"TV\" "
@@ -34,8 +34,8 @@ function usage {
   exit 1
 }
 
-if [ -z "$1" ] && [ -z "$2" ]; then
-  echo "please provide a port number and Media type"
+if [ -z "$1" ] && [ -z "$2" ] && && [ -z "$3" ]; then
+  echo "please provide a port number and Media type and if you want VFS/REFRESH Done"
   usage
 fi
 
@@ -46,6 +46,13 @@ fi
 
 if [ -z "$2" ]; then
   echo "please provide an area to refresh"
+  usage
+fi
+
+if [ -z "$3" ]; then
+  echo "please use Y or N "
+  echo "to indicate if you want to use VFS Refresh"
+  echo "you generally want Y for TV"
   usage
 fi
 
@@ -103,7 +110,7 @@ else
 fi
 }
 
-USEVFS="1"
+if [ "${3}" == "Y"];then USEVFS="1"; else USEVFS=""; fi
 
 if [ "$2" = "TV" ]; then
     #TV 
@@ -178,8 +185,6 @@ fi
 if [ "$2" = "AUDIOGERMAN" ]; then
     rclone_refresh "${1}" "zd-audiobooks-non-english/audiobooks/Audiobooks_German" &
 fi
-
-USEVFS=""
 
 if [ "$2" = "MOVIES" ]; then
     
